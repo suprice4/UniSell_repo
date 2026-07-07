@@ -20,6 +20,7 @@ function Login() {
     try {
       const res = await api.post("/auth/login", form);
       localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem("token", res.data.token);
 
       if (res.data.role === "ADMIN") {
         navigate("/admin/dashboard");
@@ -27,7 +28,9 @@ function Login() {
         navigate("/vendor/dashboard");
       }
     } catch (err) {
-      setError(err.response?.data || "Login failed. Please try again.");
+      const data = err.response?.data;
+      const message = typeof data === "string" ? data : data?.message || "Login failed. Please try again.";
+      setError(message);
     } finally {
       setLoading(false);
     }

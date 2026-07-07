@@ -6,6 +6,7 @@ import edu.cit.capendit.unisell.dto.RegisterRequest;
 import edu.cit.capendit.unisell.model.Role;
 import edu.cit.capendit.unisell.model.User;
 import edu.cit.capendit.unisell.repository.UserRepository;
+import edu.cit.capendit.unisell.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,9 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -43,6 +47,8 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return new AuthResponse(user.getId(), user.getName(), user.getEmail(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+
+        return new AuthResponse(user.getId(), user.getName(), user.getEmail(), user.getRole().name(), token);
     }
 }

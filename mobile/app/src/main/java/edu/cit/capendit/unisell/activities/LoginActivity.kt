@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body() != null) {
                         val authResponse = response.body()!!
 
-                        saveSession(authResponse.id, authResponse.name, authResponse.email, authResponse.role)
+                        saveSession(authResponse.id, authResponse.name, authResponse.email, authResponse.role, authResponse.token)
 
                         val intent = if (authResponse.role == "ADMIN") {
                             Intent(this@LoginActivity, AdminDashboardActivity::class.java)
@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-    private fun saveSession(id: Long, name: String, email: String, role: String) {
+    private fun saveSession(id: Long, name: String, email: String, role: String, token: String?) {
         val prefs = getSharedPreferences("UniSellPrefs", MODE_PRIVATE)
         prefs.edit()
             .putLong("user_id", id)
@@ -84,5 +84,6 @@ class LoginActivity : AppCompatActivity() {
             .putString("user_email", email)
             .putString("user_role", role)
             .apply()
+        token?.let { ApiClient.saveToken(it) }
     }
 }

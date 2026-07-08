@@ -1,10 +1,11 @@
-package edu.cit.capendit.unisell
+package edu.cit.capendit.unisell.core
 
 import android.app.Application
+import edu.cit.capendit.unisell.core.ApiClient
 
 class UniSellApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        edu.cit.capendit.unisell.api.ApiClient.init(applicationContext)
+        ApiClient.init(applicationContext)
     }
 }

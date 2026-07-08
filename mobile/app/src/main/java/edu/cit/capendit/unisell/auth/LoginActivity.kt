@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import edu.cit.capendit.unisell.R
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import edu.cit.capendit.unisell.api.ApiClient
+import edu.cit.capendit.unisell.core.ApiClient
 import kotlinx.coroutines.launch
 import android.content.Intent
 import edu.cit.capendit.unisell.admin.AdminDashboardActivity

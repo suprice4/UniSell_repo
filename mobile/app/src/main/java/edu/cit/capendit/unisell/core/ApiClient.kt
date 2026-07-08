@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.api
+package edu.cit.capendit.unisell.core
 
 import android.content.Context
 import android.content.SharedPreferences

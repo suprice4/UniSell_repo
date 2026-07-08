@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import edu.cit.capendit.unisell.R
-import edu.cit.capendit.unisell.api.ApiClient
+import edu.cit.capendit.unisell.core.ApiClient
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {

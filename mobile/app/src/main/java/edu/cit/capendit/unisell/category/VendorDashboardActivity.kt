@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
-import edu.cit.capendit.unisell.api.ApiClient
+import edu.cit.capendit.unisell.core.ApiClient
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Response

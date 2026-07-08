@@ -3,6 +3,7 @@ package edu.cit.capendit.unisell.api
 import android.content.Context
 import android.content.SharedPreferences
 import edu.cit.capendit.unisell.auth.AuthApi
+import edu.cit.capendit.unisell.category.CategoryApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

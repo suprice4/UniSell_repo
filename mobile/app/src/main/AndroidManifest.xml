@@ -23,7 +23,7 @@
             android:name=".activities.AdminDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.VendorDashboardActivity"
+            android:name=".category.VendorDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".auth.LoginActivity"

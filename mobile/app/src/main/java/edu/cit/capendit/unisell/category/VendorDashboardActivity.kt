@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.activities
+package edu.cit.capendit.unisell.category
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -12,10 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
-import edu.cit.capendit.unisell.adapters.CategoryAdapter
 import edu.cit.capendit.unisell.api.ApiClient
-import edu.cit.capendit.unisell.model.CategoryRequest
-import edu.cit.capendit.unisell.model.CategoryResponse
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Response

@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.model
+package edu.cit.capendit.unisell.auth
 
 data class AuthResponse(
     val id: Long,

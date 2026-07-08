@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.activities
+package edu.cit.capendit.unisell.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.api.ApiClient
-import edu.cit.capendit.unisell.auth.LoginActivity
-import edu.cit.capendit.unisell.auth.RegisterRequest
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {

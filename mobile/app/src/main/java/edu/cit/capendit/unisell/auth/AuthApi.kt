@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.api
+package edu.cit.capendit.unisell.auth
 
 import edu.cit.capendit.unisell.auth.AuthResponse
 import edu.cit.capendit.unisell.auth.LoginRequest

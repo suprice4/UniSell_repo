@@ -1,8 +1,5 @@
-package edu.cit.capendit.unisell.controller;
+package edu.cit.capendit.unisell.auth;
 
-import edu.cit.capendit.unisell.dto.LoginRequest;
-import edu.cit.capendit.unisell.dto.RegisterRequest;
-import edu.cit.capendit.unisell.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

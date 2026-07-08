@@ -1,11 +1,5 @@
-package edu.cit.capendit.unisell.service;
+package edu.cit.capendit.unisell.auth;
 
-import edu.cit.capendit.unisell.dto.AuthResponse;
-import edu.cit.capendit.unisell.dto.LoginRequest;
-import edu.cit.capendit.unisell.dto.RegisterRequest;
-import edu.cit.capendit.unisell.model.Role;
-import edu.cit.capendit.unisell.model.User;
-import edu.cit.capendit.unisell.repository.UserRepository;
 import edu.cit.capendit.unisell.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

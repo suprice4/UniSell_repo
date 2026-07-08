@@ -1,6 +1,5 @@
-package edu.cit.capendit.unisell.repository;
+package edu.cit.capendit.unisell.auth;
 
-import edu.cit.capendit.unisell.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

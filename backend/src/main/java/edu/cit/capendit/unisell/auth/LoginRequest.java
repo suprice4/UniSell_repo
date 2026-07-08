@@ -1,18 +1,9 @@
-package edu.cit.capendit.unisell.dto;
+package edu.cit.capendit.unisell.auth;
 
-public class RegisterRequest {
+public class LoginRequest {
 
-    private String name;
     private String email;
     private String password;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getEmail() {
         return email;

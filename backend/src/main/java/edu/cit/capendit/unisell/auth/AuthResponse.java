@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.dto;
+package edu.cit.capendit.unisell.auth;
 
 public class AuthResponse {
 

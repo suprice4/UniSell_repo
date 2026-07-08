@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import edu.cit.capendit.unisell.api.ApiClient
 import kotlinx.coroutines.launch
 import android.content.Intent
-import edu.cit.capendit.unisell.activities.AdminDashboardActivity
+import edu.cit.capendit.unisell.admin.AdminDashboardActivity
 import edu.cit.capendit.unisell.category.VendorDashboardActivity
 
 class LoginActivity : AppCompatActivity() {

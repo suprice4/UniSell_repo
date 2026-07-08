@@ -20,7 +20,7 @@
             android:name=".auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AdminDashboardActivity"
+            android:name=".admin.AdminDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".category.VendorDashboardActivity"

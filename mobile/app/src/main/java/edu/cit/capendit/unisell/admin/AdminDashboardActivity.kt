@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.activities
+package edu.cit.capendit.unisell.admin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

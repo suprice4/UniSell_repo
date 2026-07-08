@@ -9,7 +9,7 @@ import edu.cit.capendit.unisell.R
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import edu.cit.capendit.unisell.api.ApiClient
-import edu.cit.capendit.unisell.model.LoginRequest
+import edu.cit.capendit.unisell.auth.LoginRequest
 import kotlinx.coroutines.launch
 import android.content.Intent
 

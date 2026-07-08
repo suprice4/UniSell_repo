@@ -10,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.api.ApiClient
-import edu.cit.capendit.unisell.model.RegisterRequest
+import edu.cit.capendit.unisell.auth.LoginActivity
+import edu.cit.capendit.unisell.auth.RegisterRequest
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {

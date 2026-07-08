@@ -1,8 +1,8 @@
 package edu.cit.capendit.unisell.api
 
-import edu.cit.capendit.unisell.model.AuthResponse
-import edu.cit.capendit.unisell.model.LoginRequest
-import edu.cit.capendit.unisell.model.RegisterRequest
+import edu.cit.capendit.unisell.auth.AuthResponse
+import edu.cit.capendit.unisell.auth.LoginRequest
+import edu.cit.capendit.unisell.auth.RegisterRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

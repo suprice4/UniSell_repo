@@ -40,6 +40,28 @@ function VendorDashboard() {
   const [editProductLoading, setEditProductLoading] = useState(false);
   const [editProductError, setEditProductError] = useState("");
 
+  // --- Platform state ---
+  const [platforms, setPlatforms] = useState([]);
+  const [loadingPlatforms, setLoadingPlatforms] = useState(true);
+  const [platformListError, setPlatformListError] = useState("");
+
+  const [newPlatformName, setNewPlatformName] = useState("");
+  const [addPlatformLoading, setAddPlatformLoading] = useState(false);
+  const [addPlatformError, setAddPlatformError] = useState("");
+
+  const [deletingPlatformId, setDeletingPlatformId] = useState(null);
+
+  // --- Inventory (per-product platform allocation) state ---
+  const [expandedProductId, setExpandedProductId] = useState(null);
+  const [inventoryByProduct, setInventoryByProduct] = useState({}); // { [productId]: [allocations] }
+  const [loadingInventoryFor, setLoadingInventoryFor] = useState(null);
+  const [inventoryError, setInventoryError] = useState("");
+
+  const [allocPlatformId, setAllocPlatformId] = useState("");
+  const [allocQuantity, setAllocQuantity] = useState("");
+  const [allocLoading, setAllocLoading] = useState(false);
+  const [allocError, setAllocError] = useState("");
+
   const getErrorMessage = (err, fallback) => {
     const data = err.response?.data;
     return typeof data === "string" ? data : data?.message || fallback;
@@ -71,9 +93,23 @@ function VendorDashboard() {
     }
   };
 
+  const fetchPlatforms = async () => {
+    setPlatformListError("");
+    setLoadingPlatforms(true);
+    try {
+      const res = await api.get("/platforms");
+      setPlatforms(res.data);
+    } catch (err) {
+      setPlatformListError(getErrorMessage(err, "Failed to load platforms."));
+    } finally {
+      setLoadingPlatforms(false);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
     fetchProducts();
+    fetchPlatforms();
   }, []);
 
   const handleAddProduct = async (e) => {
@@ -214,6 +250,106 @@ function VendorDashboard() {
     }
   };
 
+  // --- Platform handlers ---
+  const handleAddPlatform = async (e) => {
+    e.preventDefault();
+    setAddPlatformError("");
+    setAddPlatformLoading(true);
+
+    try {
+      const res = await api.post("/platforms", { name: newPlatformName });
+      setPlatforms([...platforms, res.data]);
+      setNewPlatformName("");
+    } catch (err) {
+      setAddPlatformError(getErrorMessage(err, "Failed to add platform."));
+    } finally {
+      setAddPlatformLoading(false);
+    }
+  };
+
+  const handleDeletePlatform = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this platform?");
+    if (!confirmed) return;
+
+    setPlatformListError("");
+    setDeletingPlatformId(id);
+    try {
+      await api.delete(`/platforms/${id}`);
+      setPlatforms(platforms.filter((p) => p.id !== id));
+    } catch (err) {
+      setPlatformListError(getErrorMessage(err, "Failed to delete platform."));
+    } finally {
+      setDeletingPlatformId(null);
+    }
+  };
+
+  // --- Inventory handlers ---
+  const fetchInventoryForProduct = async (productId) => {
+    setInventoryError("");
+    setLoadingInventoryFor(productId);
+    try {
+      const res = await api.get(`/products/${productId}/inventory`);
+      setInventoryByProduct((prev) => ({ ...prev, [productId]: res.data }));
+    } catch (err) {
+      setInventoryError(getErrorMessage(err, "Failed to load allocations."));
+    } finally {
+      setLoadingInventoryFor(null);
+    }
+  };
+
+  const toggleExpandProduct = (productId) => {
+    if (expandedProductId === productId) {
+      setExpandedProductId(null);
+      return;
+    }
+    setExpandedProductId(productId);
+    setAllocPlatformId("");
+    setAllocQuantity("");
+    setAllocError("");
+    if (!inventoryByProduct[productId]) {
+      fetchInventoryForProduct(productId);
+    }
+  };
+
+  const handleAllocate = async (e, productId) => {
+    e.preventDefault();
+    setAllocError("");
+    setAllocLoading(true);
+
+    try {
+      const res = await api.post(`/products/${productId}/inventory`, {
+        platformId: parseInt(allocPlatformId, 10),
+        allocatedQuantity: parseInt(allocQuantity, 10),
+      });
+      setInventoryByProduct((prev) => ({
+        ...prev,
+        [productId]: [...(prev[productId] || []), res.data],
+      }));
+      setAllocPlatformId("");
+      setAllocQuantity("");
+    } catch (err) {
+      setAllocError(getErrorMessage(err, "Failed to allocate stock."));
+    } finally {
+      setAllocLoading(false);
+    }
+  };
+
+  const handleDeleteAllocation = async (productId, platformId) => {
+    const confirmed = window.confirm("Remove this platform allocation?");
+    if (!confirmed) return;
+
+    setInventoryError("");
+    try {
+      await api.delete(`/products/${productId}/inventory/${platformId}`);
+      setInventoryByProduct((prev) => ({
+        ...prev,
+        [productId]: (prev[productId] || []).filter((a) => a.platformId !== platformId),
+      }));
+    } catch (err) {
+      setInventoryError(getErrorMessage(err, "Failed to remove allocation."));
+    }
+  };
+
   return (
     <div style={{ maxWidth: "500px", margin: "60px auto", fontFamily: "sans-serif" }}>
       <h2>Vendor Dashboard</h2>
@@ -297,6 +433,57 @@ function VendorDashboard() {
         </ul>
       )}
 
+      <h3 style={{ marginTop: "32px" }}>Platforms</h3>
+
+      <form onSubmit={handleAddPlatform} style={{ marginBottom: "16px" }}>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <input
+            type="text"
+            value={newPlatformName}
+            onChange={(e) => setNewPlatformName(e.target.value)}
+            placeholder="New platform name"
+            required
+            style={{ flex: 1, padding: "8px" }}
+          />
+          <button type="submit" disabled={addPlatformLoading} style={{ padding: "8px 16px" }}>
+            {addPlatformLoading ? "Adding..." : "Add"}
+          </button>
+        </div>
+        {addPlatformError && <p style={{ color: "red" }}>{addPlatformError}</p>}
+      </form>
+
+      {platformListError && <p style={{ color: "red" }}>{platformListError}</p>}
+
+      {loadingPlatforms ? (
+        <p>Loading platforms...</p>
+      ) : platforms.length === 0 ? (
+        <p>No platforms yet.</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {platforms.map((platform) => (
+            <li
+              key={platform.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 0",
+                borderBottom: "1px solid #eee",
+              }}
+            >
+              <span style={{ flex: 1 }}>{platform.name}</span>
+              <button
+                onClick={() => handleDeletePlatform(platform.id)}
+                disabled={deletingPlatformId === platform.id}
+                style={{ padding: "6px 12px" }}
+              >
+                {deletingPlatformId === platform.id ? "Deleting..." : "Delete"}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <h3 style={{ marginTop: "32px" }}>Products</h3>
 
       <form onSubmit={handleAddProduct} style={{ marginBottom: "16px" }}>
@@ -358,6 +545,7 @@ function VendorDashboard() {
 
       {productListError && <p style={{ color: "red" }}>{productListError}</p>}
       {editProductError && <p style={{ color: "red" }}>{editProductError}</p>}
+      {inventoryError && <p style={{ color: "red" }}>{inventoryError}</p>}
 
       {loadingProducts ? (
         <p>Loading products...</p>
@@ -449,9 +637,96 @@ function VendorDashboard() {
                     >
                       {deletingProductId === product.id ? "Deleting..." : "Delete"}
                     </button>
+                    <button
+                      onClick={() => toggleExpandProduct(product.id)}
+                      style={{ padding: "6px 12px" }}
+                    >
+                      {expandedProductId === product.id ? "Hide platforms" : "Platforms"}
+                    </button>
                   </>
                 )}
               </div>
+
+              {expandedProductId === product.id && (
+                <div
+                  style={{
+                    marginTop: "8px",
+                    marginLeft: "16px",
+                    padding: "8px",
+                    background: "#fafafa",
+                    border: "1px solid #eee",
+                  }}
+                >
+                  <strong style={{ fontSize: "0.9em" }}>Platform allocations</strong>
+
+                  {loadingInventoryFor === product.id ? (
+                    <p style={{ fontSize: "0.9em" }}>Loading...</p>
+                  ) : (
+                    <ul style={{ listStyle: "none", padding: 0, marginTop: "6px" }}>
+                      {(inventoryByProduct[product.id] || []).length === 0 && (
+                        <li style={{ fontSize: "0.9em", color: "#888" }}>No allocations yet.</li>
+                      )}
+                      {(inventoryByProduct[product.id] || []).map((alloc) => (
+                        <li
+                          key={alloc.id}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            fontSize: "0.9em",
+                            padding: "4px 0",
+                          }}
+                        >
+                          <span style={{ flex: 1 }}>
+                            {alloc.platformName}: {alloc.allocatedQuantity}
+                          </span>
+                          <button
+                            onClick={() => handleDeleteAllocation(product.id, alloc.platformId)}
+                            style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <form
+                    onSubmit={(e) => handleAllocate(e, product.id)}
+                    style={{ display: "flex", gap: "6px", marginTop: "8px" }}
+                  >
+                    <select
+                      value={allocPlatformId}
+                      onChange={(e) => setAllocPlatformId(e.target.value)}
+                      required
+                      style={{ padding: "6px", flex: 1 }}
+                    >
+                      <option value="" disabled>
+                        Select platform
+                      </option>
+                      {platforms.map((platform) => (
+                        <option key={platform.id} value={platform.id}>
+                          {platform.name}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="number"
+                      value={allocQuantity}
+                      onChange={(e) => setAllocQuantity(e.target.value)}
+                      placeholder="Qty"
+                      required
+                      style={{ padding: "6px", width: "80px" }}
+                    />
+                    <button type="submit" disabled={allocLoading} style={{ padding: "6px 12px" }}>
+                      {allocLoading ? "..." : "Allocate"}
+                    </button>
+                  </form>
+                  {allocError && (
+                    <p style={{ color: "red", fontSize: "0.9em", marginTop: "4px" }}>{allocError}</p>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>

@@ -2,15 +2,15 @@ package edu.cit.capendit.unisell.core
 
 import android.content.Context
 import android.content.SharedPreferences
-import edu.cit.capendit.unisell.auth.AuthApi
-import edu.cit.capendit.unisell.category.CategoryApi
+import edu.cit.capendit.unisell.auth.api.AuthApi
+import edu.cit.capendit.unisell.category.api.CategoryApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import edu.cit.capendit.unisell.product.ProductApi
-import edu.cit.capendit.unisell.platform.PlatformApi
-import edu.cit.capendit.unisell.platform.InventoryApi
+import edu.cit.capendit.unisell.product.api.ProductApi
+import edu.cit.capendit.unisell.platform.api.PlatformApi
+import edu.cit.capendit.unisell.inventory.api.InventoryApi
 
 object ApiClient {
 

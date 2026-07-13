@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.admin
+package edu.cit.capendit.unisell.dashboard
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

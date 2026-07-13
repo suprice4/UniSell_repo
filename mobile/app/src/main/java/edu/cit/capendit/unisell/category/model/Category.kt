@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.category
+package edu.cit.capendit.unisell.category.model
 
 data class CategoryRequest(
     val name: String

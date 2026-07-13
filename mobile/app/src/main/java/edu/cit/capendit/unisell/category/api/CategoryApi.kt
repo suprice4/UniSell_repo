@@ -1,7 +1,7 @@
-package edu.cit.capendit.unisell.category
+package edu.cit.capendit.unisell.category.api
 
-import edu.cit.capendit.unisell.category.CategoryRequest
-import edu.cit.capendit.unisell.category.CategoryResponse
+import edu.cit.capendit.unisell.category.model.CategoryRequest
+import edu.cit.capendit.unisell.category.model.CategoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

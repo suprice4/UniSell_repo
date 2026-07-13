@@ -1,5 +1,7 @@
-package edu.cit.capendit.unisell.platform
+package edu.cit.capendit.unisell.inventory.api
 
+import edu.cit.capendit.unisell.inventory.model.ProductPlatformInventoryRequest
+import edu.cit.capendit.unisell.inventory.model.ProductPlatformInventoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

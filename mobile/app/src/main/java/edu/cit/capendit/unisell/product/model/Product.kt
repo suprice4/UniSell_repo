@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.product
+package edu.cit.capendit.unisell.product.model
 
 data class ProductRequest(
     val name: String,

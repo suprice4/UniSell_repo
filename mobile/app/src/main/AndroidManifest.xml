@@ -17,16 +17,16 @@
         android:theme="@style/Theme.UniSell"
         tools:targetApi="31">
         <activity
-            android:name=".auth.RegisterActivity"
+            android:name=".auth.ui.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".admin.AdminDashboardActivity"
+            android:name=".dashboard.AdminDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".category.VendorDashboardActivity"
+            android:name=".dashboard.VendorDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.LoginActivity"
+            android:name=".auth.ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

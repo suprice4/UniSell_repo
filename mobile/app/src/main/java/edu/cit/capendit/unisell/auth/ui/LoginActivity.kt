@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.auth
+package edu.cit.capendit.unisell.auth.ui
 
 import android.os.Bundle
 import android.widget.Button
@@ -11,8 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import edu.cit.capendit.unisell.core.ApiClient
 import kotlinx.coroutines.launch
 import android.content.Intent
-import edu.cit.capendit.unisell.admin.AdminDashboardActivity
-import edu.cit.capendit.unisell.category.VendorDashboardActivity
+import edu.cit.capendit.unisell.dashboard.AdminDashboardActivity
+import edu.cit.capendit.unisell.auth.dto.LoginRequest
+import edu.cit.capendit.unisell.dashboard.VendorDashboardActivity
 
 class LoginActivity : AppCompatActivity() {
 

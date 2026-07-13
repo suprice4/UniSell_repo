@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.category
+package edu.cit.capendit.unisell.category.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
+import edu.cit.capendit.unisell.category.model.CategoryResponse
 
 class CategoryAdapter(
     private val categories: MutableList<CategoryResponse>,

@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.platform
+package edu.cit.capendit.unisell.inventory.model
 
 data class ProductPlatformInventoryRequest(
     val platformId: Long,

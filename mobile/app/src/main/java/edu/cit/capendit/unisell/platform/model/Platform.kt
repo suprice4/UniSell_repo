@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.platform
+package edu.cit.capendit.unisell.platform.model
 
 data class PlatformRequest(
     val name: String

@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.auth
+package edu.cit.capendit.unisell.auth.dto
 
 data class RegisterRequest(
     val name: String,

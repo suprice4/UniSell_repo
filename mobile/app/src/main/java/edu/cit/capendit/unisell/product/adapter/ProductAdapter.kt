@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.product
+package edu.cit.capendit.unisell.product.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +11,9 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
-import edu.cit.capendit.unisell.platform.PlatformResponse
-import edu.cit.capendit.unisell.platform.ProductPlatformInventoryResponse
+import edu.cit.capendit.unisell.platform.model.PlatformResponse
+import edu.cit.capendit.unisell.inventory.model.ProductPlatformInventoryResponse
+import edu.cit.capendit.unisell.product.model.ProductResponse
 
 class ProductAdapter(
     private val products: MutableList<ProductResponse>,
@@ -74,7 +75,7 @@ class ProductAdapter(
         } else {
             for (allocation in allocations) {
                 val row = LayoutInflater.from(holder.itemView.context)
-                    .inflate(R.layout.item_allocation_row, holder.llAllocationRows, false)
+                    .inflate(R.layout.item_inventory_allocation_row, holder.llAllocationRows, false)
                 row.findViewById<TextView>(R.id.tvAllocationLabel).text =
                     "${allocation.platformName}: ${allocation.allocatedQuantity}"
                 row.findViewById<Button>(R.id.btnRemoveAllocation).setOnClickListener {

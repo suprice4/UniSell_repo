@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.category
+package edu.cit.capendit.unisell.dashboard
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -15,17 +15,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
+import edu.cit.capendit.unisell.category.adapter.CategoryAdapter
+import edu.cit.capendit.unisell.category.model.CategoryRequest
+import edu.cit.capendit.unisell.category.model.CategoryResponse
 import edu.cit.capendit.unisell.core.ApiClient
-import edu.cit.capendit.unisell.product.ProductAdapter
-import edu.cit.capendit.unisell.product.ProductRequest
-import edu.cit.capendit.unisell.product.ProductResponse
+import edu.cit.capendit.unisell.product.adapter.ProductAdapter
+import edu.cit.capendit.unisell.product.model.ProductRequest
+import edu.cit.capendit.unisell.product.model.ProductResponse
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Response
-import edu.cit.capendit.unisell.platform.PlatformAdapter
-import edu.cit.capendit.unisell.platform.PlatformRequest
-import edu.cit.capendit.unisell.platform.PlatformResponse
-import edu.cit.capendit.unisell.platform.ProductPlatformInventoryRequest
+import edu.cit.capendit.unisell.platform.adapter.PlatformAdapter
+import edu.cit.capendit.unisell.platform.model.PlatformRequest
+import edu.cit.capendit.unisell.platform.model.PlatformResponse
+import edu.cit.capendit.unisell.inventory.model.ProductPlatformInventoryRequest
 
 class VendorDashboardActivity : AppCompatActivity() {
 

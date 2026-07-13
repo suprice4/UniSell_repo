@@ -1,5 +1,7 @@
-package edu.cit.capendit.unisell.platform
+package edu.cit.capendit.unisell.platform.api
 
+import edu.cit.capendit.unisell.platform.model.PlatformRequest
+import edu.cit.capendit.unisell.platform.model.PlatformResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

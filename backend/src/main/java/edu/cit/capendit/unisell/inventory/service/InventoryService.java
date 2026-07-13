@@ -1,9 +1,9 @@
-package edu.cit.capendit.unisell.platform.inventory.service;
+package edu.cit.capendit.unisell.inventory.service;
 
-import edu.cit.capendit.unisell.platform.inventory.dto.ProductPlatformInventoryRequest;
-import edu.cit.capendit.unisell.platform.inventory.dto.ProductPlatformInventoryResponse;
-import edu.cit.capendit.unisell.platform.inventory.model.ProductPlatformInventory;
-import edu.cit.capendit.unisell.platform.inventory.repository.ProductPlatformInventoryRepository;
+import edu.cit.capendit.unisell.inventory.dto.InventoryRequest;
+import edu.cit.capendit.unisell.inventory.dto.InventoryResponse;
+import edu.cit.capendit.unisell.inventory.model.Inventory;
+import edu.cit.capendit.unisell.inventory.repository.InventoryRepository;
 import edu.cit.capendit.unisell.platform.model.Platform;
 import edu.cit.capendit.unisell.platform.repository.PlatformRepository;
 import edu.cit.capendit.unisell.product.model.Product;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductPlatformInventoryService {
+public class InventoryService {
 
-    private final ProductPlatformInventoryRepository inventoryRepository;
+    private final InventoryRepository inventoryRepository;
     private final ProductRepository productRepository;
     private final PlatformRepository platformRepository;
 
-    public ProductPlatformInventoryService(ProductPlatformInventoryRepository inventoryRepository,
+    public InventoryService(InventoryRepository inventoryRepository,
                                             ProductRepository productRepository,
                                             PlatformRepository platformRepository) {
         this.inventoryRepository = inventoryRepository;
@@ -29,7 +29,7 @@ public class ProductPlatformInventoryService {
         this.platformRepository = platformRepository;
     }
 
-    public List<ProductPlatformInventoryResponse> getAllocationsForProduct(Long productId, String vendorEmail) {
+    public List<InventoryResponse> getAllocationsForProduct(Long productId, String vendorEmail) {
         // Confirm the product belongs to the caller first
         productRepository.findByIdAndVendorEmail(productId, vendorEmail)
                 .orElseThrow(() -> new ProductService.ProductNotFoundException(productId));
@@ -40,8 +40,8 @@ public class ProductPlatformInventoryService {
                 .toList();
     }
 
-    public ProductPlatformInventoryResponse allocateStock(Long productId,
-                                                            ProductPlatformInventoryRequest request,
+    public InventoryResponse allocateStock(Long productId,
+                                                            InventoryRequest request,
                                                             String vendorEmail) {
         Product product = productRepository.findByIdAndVendorEmail(productId, vendorEmail)
                 .orElseThrow(() -> new ProductService.ProductNotFoundException(productId));
@@ -74,24 +74,24 @@ public class ProductPlatformInventoryService {
                     request.getAllocatedQuantity() + " more.");
         }
 
-        ProductPlatformInventory inventory = new ProductPlatformInventory();
+        Inventory inventory = new Inventory();
         inventory.setProduct(product);
         inventory.setPlatform(platform);
         inventory.setAllocatedQuantity(request.getAllocatedQuantity());
 
-        ProductPlatformInventory saved = inventoryRepository.save(inventory);
+        Inventory saved = inventoryRepository.save(inventory);
         return toResponse(saved);
     }
 
-    public ProductPlatformInventoryResponse updateAllocation(Long productId, Long platformId,
-                                                               ProductPlatformInventoryRequest request,
+    public InventoryResponse updateAllocation(Long productId, Long platformId,
+                                                               InventoryRequest request,
                                                                String vendorEmail) {
         Product product = productRepository.findByIdAndVendorEmail(productId, vendorEmail)
                 .orElseThrow(() -> new ProductService.ProductNotFoundException(productId));
 
         validateQuantity(request.getAllocatedQuantity());
 
-        ProductPlatformInventory inventory = inventoryRepository
+        Inventory inventory = inventoryRepository
                 .findByProductIdAndPlatformIdAndProductVendorEmail(productId, platformId, vendorEmail)
                 .orElseThrow(() -> new InventoryNotFoundException(productId, platformId));
 
@@ -107,7 +107,7 @@ public class ProductPlatformInventoryService {
         }
 
         inventory.setAllocatedQuantity(request.getAllocatedQuantity());
-        ProductPlatformInventory saved = inventoryRepository.save(inventory);
+        Inventory saved = inventoryRepository.save(inventory);
         return toResponse(saved);
     }
 
@@ -115,7 +115,7 @@ public class ProductPlatformInventoryService {
         productRepository.findByIdAndVendorEmail(productId, vendorEmail)
                 .orElseThrow(() -> new ProductService.ProductNotFoundException(productId));
 
-        ProductPlatformInventory inventory = inventoryRepository
+        Inventory inventory = inventoryRepository
                 .findByProductIdAndPlatformIdAndProductVendorEmail(productId, platformId, vendorEmail)
                 .orElseThrow(() -> new InventoryNotFoundException(productId, platformId));
 
@@ -128,8 +128,8 @@ public class ProductPlatformInventoryService {
         }
     }
 
-    private ProductPlatformInventoryResponse toResponse(ProductPlatformInventory inventory) {
-        return new ProductPlatformInventoryResponse(
+    private InventoryResponse toResponse(Inventory inventory) {
+        return new InventoryResponse(
                 inventory.getId(),
                 inventory.getPlatform().getId(),
                 inventory.getPlatform().getName(),

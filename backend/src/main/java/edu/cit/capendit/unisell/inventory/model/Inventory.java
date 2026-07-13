@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.platform.inventory.model;
+package edu.cit.capendit.unisell.inventory.model;
 
 import edu.cit.capendit.unisell.platform.model.Platform;
 import edu.cit.capendit.unisell.product.model.Product;
@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Table(name = "product_platform_inventory", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"product_id", "platform_id"})
 })
-public class ProductPlatformInventory {
+public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class ProductPlatformInventory {
     @Column(name = "allocated_quantity", nullable = false)
     private Integer allocatedQuantity;
 
-    public ProductPlatformInventory() {}
+    public Inventory() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

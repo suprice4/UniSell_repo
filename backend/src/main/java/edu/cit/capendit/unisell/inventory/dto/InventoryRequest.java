@@ -1,11 +1,11 @@
-package edu.cit.capendit.unisell.platform.inventory.dto;
+package edu.cit.capendit.unisell.inventory.dto;
 
-public class ProductPlatformInventoryRequest {
+public class InventoryRequest {
 
     private Long platformId;
     private Integer allocatedQuantity;
 
-    public ProductPlatformInventoryRequest() {}
+    public InventoryRequest() {}
 
     public Long getPlatformId() { return platformId; }
     public void setPlatformId(Long platformId) { this.platformId = platformId; }

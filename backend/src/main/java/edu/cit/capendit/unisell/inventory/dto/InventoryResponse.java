@@ -1,6 +1,6 @@
-package edu.cit.capendit.unisell.platform.inventory.dto;
+package edu.cit.capendit.unisell.inventory.dto;
 
-public class ProductPlatformInventoryResponse {
+public class InventoryResponse {
 
     private Long id;
     private Long platformId;
@@ -8,9 +8,9 @@ public class ProductPlatformInventoryResponse {
     private Long productId;
     private Integer allocatedQuantity;
 
-    public ProductPlatformInventoryResponse() {}
+    public InventoryResponse() {}
 
-    public ProductPlatformInventoryResponse(Long id, Long platformId, String platformName,
+    public InventoryResponse(Long id, Long platformId, String platformName,
                                              Long productId, Integer allocatedQuantity) {
         this.id = id;
         this.platformId = platformId;

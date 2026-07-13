@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvProductName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvProductDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="#666666" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnEditProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/btnDeleteProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnTogglePlatforms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Platforms"
+        android:layout_marginTop="8dp" />
+
+    <LinearLayout
+        android:id="@+id/llInventoryPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingTop="8dp"
+        android:paddingStart="8dp"
+        android:background="#F5F5F5">
+
+        <LinearLayout
+            android:id="@+id/llAllocationRows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/tvInventoryError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#D32F2F"
+            android:visibility="gone"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
+
+            <Spinner
+                android:id="@+id/spinnerAllocationPlatform"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/etAllocationQuantity"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:hint="Qty"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btnAllocate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Allocate" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

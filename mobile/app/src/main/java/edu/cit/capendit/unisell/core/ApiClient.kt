@@ -8,12 +8,17 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import edu.cit.capendit.unisell.product.ProductApi
+import edu.cit.capendit.unisell.platform.PlatformApi
+import edu.cit.capendit.unisell.platform.InventoryApi
 
 object ApiClient {
 
     private const val BASE_URL = "http://10.0.2.2:8080/api/"
     private const val PREFS_NAME = "UniSellPrefs"
     private const val TOKEN_KEY = "auth_token"
+
+
 
 
     private lateinit var prefs: SharedPreferences
@@ -69,6 +74,8 @@ object ApiClient {
         .build()
 
     val authApi: AuthApi = retrofit.create(AuthApi::class.java)
-        val categoryApi: CategoryApi = retrofit.create(CategoryApi::class.java)
-
+    val categoryApi: CategoryApi = retrofit.create(CategoryApi::class.java)
+    val productApi: ProductApi = retrofit.create(ProductApi::class.java)
+    val platformApi: PlatformApi = retrofit.create(PlatformApi::class.java)
+    val inventoryApi: InventoryApi = retrofit.create(InventoryApi::class.java)
 }

@@ -1,6 +1,7 @@
 import CategorySection from "../../category/components/CategorySection";
 import PlatformSection from "../../platform/components/PlatformSection";
 import ProductSection from "../../product/components/ProductSection";
+import OrderSection from "../../order/components/OrderSection";
 
 function VendorDashboard() {
   return (
@@ -9,6 +10,7 @@ function VendorDashboard() {
       <CategorySection />
       <PlatformSection />
       <ProductSection />
+      <OrderSection />
     </div>
   );
 }

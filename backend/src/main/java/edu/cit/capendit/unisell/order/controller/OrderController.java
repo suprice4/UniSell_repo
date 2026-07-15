@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -34,9 +35,13 @@ public class OrderController {
     private ProductRepository productRepository;
 
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders(Authentication authentication) {
+    public ResponseEntity<List<OrderResponse>> getOrders(Authentication authentication) {
         String vendorEmail = authentication.getName();
-        return ResponseEntity.ok(orderRepository.findAllByVendorEmail(vendorEmail));
+        List<OrderResponse> responses = orderRepository.findAllByVendorEmail(vendorEmail)
+                .stream()
+                .map(OrderResponse::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}/items")
@@ -76,7 +81,7 @@ public class OrderController {
 
         try {
             Order created = orderService.createOrder(order, requestedItems, vendorEmail);
-            return ResponseEntity.ok(created);
+            return ResponseEntity.ok(OrderResponse.fromEntity(created));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -89,7 +94,7 @@ public class OrderController {
         String vendorEmail = authentication.getName();
         try {
             Order updated = orderService.updateStatus(id, request.getStatus(), vendorEmail);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(OrderResponse.fromEntity(updated));
         } catch (IllegalStateException e) {
             return handleError(e);
         }
@@ -102,7 +107,7 @@ public class OrderController {
         String vendorEmail = authentication.getName();
         try {
             Order updated = orderService.updatePaymentStatus(id, request.getPaymentStatus(), vendorEmail);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(OrderResponse.fromEntity(updated));
         } catch (IllegalStateException e) {
             return handleError(e);
         }
@@ -117,7 +122,7 @@ public class OrderController {
         try {
             Order updated = orderService.processReturn(
                     id, request.getOrderItemIds(), request.getReason(), vendorEmail);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(OrderResponse.fromEntity(updated));
         } catch (IllegalStateException e) {
             return handleError(e);
         }
@@ -131,7 +136,7 @@ public class OrderController {
         try {
             if ("UNCOLLECTED".equalsIgnoreCase(request.getStatus())) {
                 Order updated = orderService.markShipmentUncollected(id, vendorEmail);
-                return ResponseEntity.ok(updated);
+                return ResponseEntity.ok(OrderResponse.fromEntity(updated));
             }
             // IN_TRANSIT / DELIVERED handling will be filled in once the full shipment feature lands
             return ResponseEntity.badRequest().body("Unsupported shipment status: " + request.getStatus());

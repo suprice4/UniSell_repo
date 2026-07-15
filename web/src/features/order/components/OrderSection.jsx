@@ -48,7 +48,7 @@ function OrderSection() {
                 onClick={() => toggleExpandOrder(order.id)}
               >
                 <span style={{ flex: 1 }}>
-                  Order #{order.id} — {order.platform?.name} — ₱{order.totalAmount}
+                  Order #{order.id} — {order.platformName} — ₱{order.totalAmount}
                 </span>
                 <span>{order.status}</span>
                 <span style={{ fontSize: "12px", color: "#666" }}>{order.paymentStatus}</span>

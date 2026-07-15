@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import edu.cit.capendit.unisell.product.api.ProductApi
 import edu.cit.capendit.unisell.platform.api.PlatformApi
 import edu.cit.capendit.unisell.inventory.api.InventoryApi
+import edu.cit.capendit.unisell.order.api.OrderApi
 
 object ApiClient {
 
@@ -78,4 +79,5 @@ object ApiClient {
     val productApi: ProductApi = retrofit.create(ProductApi::class.java)
     val platformApi: PlatformApi = retrofit.create(PlatformApi::class.java)
     val inventoryApi: InventoryApi = retrofit.create(InventoryApi::class.java)
+    val orderApi: OrderApi = retrofit.create(OrderApi::class.java)
 }

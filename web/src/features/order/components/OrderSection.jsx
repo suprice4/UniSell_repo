@@ -1,4 +1,6 @@
 import { useOrders } from "../hooks/useOrders";
+import { usePlatforms } from "../../platform/hooks/usePlatforms";
+import { useProducts } from "../../product/hooks/useProducts";
 
 const NEXT_STATUS = {
   PENDING: "PROCESSING",
@@ -26,11 +28,90 @@ function OrderSection() {
     setReturnReason,
     handleProcessReturn,
     handleMarkUncollected,
+    newOrderPlatformId,
+    setNewOrderPlatformId,
+    newOrderItems,
+    addOrderItemRow,
+    removeOrderItemRow,
+    updateOrderItemRow,
+    createOrderLoading,
+    createOrderError,
+    handleCreateOrderSubmit,
   } = useOrders();
+
+  const { platforms } = usePlatforms();
+  const { products } = useProducts();
 
   return (
     <div>
       <h3 style={{ marginTop: "32px" }}>Orders</h3>
+
+      <form onSubmit={handleCreateOrderSubmit} style={{ marginBottom: "16px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <select
+            value={newOrderPlatformId}
+            onChange={(e) => setNewOrderPlatformId(e.target.value)}
+            required
+            style={{ padding: "8px" }}
+          >
+            <option value="" disabled>
+              Select platform
+            </option>
+            {platforms.map((platform) => (
+              <option key={platform.id} value={platform.id}>
+                {platform.name}
+              </option>
+            ))}
+          </select>
+
+          {newOrderItems.map((row, index) => (
+            <div key={index} style={{ display: "flex", gap: "8px" }}>
+              <select
+                value={row.productId}
+                onChange={(e) => updateOrderItemRow(index, "productId", e.target.value)}
+                required
+                style={{ flex: 2, padding: "8px" }}
+              >
+                <option value="" disabled>
+                  Select product
+                </option>
+                {products.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name} ({product.sku})
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                min="1"
+                value={row.quantity}
+                onChange={(e) => updateOrderItemRow(index, "quantity", e.target.value)}
+                placeholder="Qty"
+                required
+                style={{ flex: 1, padding: "8px" }}
+              />
+              {newOrderItems.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeOrderItemRow(index)}
+                  style={{ padding: "8px 12px" }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
+
+          <button type="button" onClick={addOrderItemRow} style={{ padding: "8px 16px", alignSelf: "flex-start" }}>
+            + Add Product
+          </button>
+
+          <button type="submit" disabled={createOrderLoading} style={{ padding: "8px 16px" }}>
+            {createOrderLoading ? "Creating..." : "Create Order"}
+          </button>
+        </div>
+        {createOrderError && <p style={{ color: "red" }}>{createOrderError}</p>}
+      </form>
 
       {orderListError && <p style={{ color: "red" }}>{orderListError}</p>}
       {orderActionError && <p style={{ color: "red" }}>{orderActionError}</p>}

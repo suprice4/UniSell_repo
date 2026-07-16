@@ -12,6 +12,8 @@ const NEXT_STATUS = {
   SHIPPED: "DELIVERED",
 };
 
+const emptyItemRow = () => ({ productId: "", quantity: "" });
+
 export function useOrders() {
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
@@ -27,6 +29,11 @@ export function useOrders() {
 
   const [returnReasonByOrderId, setReturnReasonByOrderId] = useState({});
   const [selectedReturnItemIds, setSelectedReturnItemIds] = useState([]);
+
+  const [newOrderPlatformId, setNewOrderPlatformId] = useState("");
+  const [newOrderItems, setNewOrderItems] = useState([emptyItemRow()]);
+  const [createOrderLoading, setCreateOrderLoading] = useState(false);
+  const [createOrderError, setCreateOrderError] = useState("");
 
   const fetchOrders = async () => {
     setOrderListError("");
@@ -137,6 +144,53 @@ export function useOrders() {
     }
   };
 
+  const addOrderItemRow = () => {
+    setNewOrderItems((prev) => [...prev, emptyItemRow()]);
+  };
+
+  const removeOrderItemRow = (index) => {
+    setNewOrderItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateOrderItemRow = (index, field, value) => {
+    setNewOrderItems((prev) =>
+      prev.map((row, i) => (i === index ? { ...row, [field]: value } : row))
+    );
+  };
+
+  const resetCreateOrderForm = () => {
+    setNewOrderPlatformId("");
+    setNewOrderItems([emptyItemRow()]);
+  };
+
+  const handleCreateOrderSubmit = async (e) => {
+    e.preventDefault();
+    setCreateOrderError("");
+
+    if (!newOrderPlatformId) {
+      setCreateOrderError("Select a platform.");
+      return;
+    }
+    const items = newOrderItems
+      .filter((row) => row.productId && row.quantity)
+      .map((row) => ({ productId: Number(row.productId), quantity: Number(row.quantity) }));
+    if (items.length === 0) {
+      setCreateOrderError("Add at least one product with a quantity.");
+      return;
+    }
+
+    setCreateOrderLoading(true);
+    try {
+      const res = await ordersApi.create({ platformId: Number(newOrderPlatformId), items });
+      setOrders((prev) => [res.data, ...prev]);
+      resetCreateOrderForm();
+    } catch (err) {
+      setCreateOrderError(getErrorMessage(err, "Failed to create order."));
+    } finally {
+      setCreateOrderLoading(false);
+    }
+  };
+
   return {
     orders,
     loadingOrders,
@@ -156,5 +210,14 @@ export function useOrders() {
     setReturnReason,
     handleProcessReturn,
     handleMarkUncollected,
+    newOrderPlatformId,
+    setNewOrderPlatformId,
+    newOrderItems,
+    addOrderItemRow,
+    removeOrderItemRow,
+    updateOrderItemRow,
+    createOrderLoading,
+    createOrderError,
+    handleCreateOrderSubmit,
   };
 }

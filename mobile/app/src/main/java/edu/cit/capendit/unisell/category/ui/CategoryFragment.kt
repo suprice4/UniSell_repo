@@ -8,7 +8,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
@@ -16,6 +16,8 @@ import edu.cit.capendit.unisell.category.adapter.CategoryAdapter
 import edu.cit.capendit.unisell.category.model.CategoryRequest
 import edu.cit.capendit.unisell.category.model.CategoryResponse
 import edu.cit.capendit.unisell.core.ApiClient
+import edu.cit.capendit.unisell.dashboard.DashboardViewModel
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Response
@@ -28,7 +30,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     private lateinit var progressBar: ProgressBar
     private lateinit var rvCategories: RecyclerView
 
-    private val categoryList = mutableListOf<CategoryResponse>()
+    private val dashboardViewModel: DashboardViewModel by activityViewModels()
     private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +43,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         rvCategories = view.findViewById(R.id.rvCategories)
 
         categoryAdapter = CategoryAdapter(
-            categoryList,
+            mutableListOf(),
             onEdit = { showEditCategoryDialog(it) },
             onDelete = { showDeleteCategoryConfirm(it) }
         )
@@ -51,7 +53,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
 
         btnAddCategory.setOnClickListener { addCategory() }
 
-        loadCategories()
+        dashboardViewModel.categories.observe(viewLifecycleOwner) { categoryAdapter.updateData(it) }
+        dashboardViewModel.loadCategoriesIfNeeded()
     }
 
     private fun extractErrorMessage(response: Response<*>): String {
@@ -82,19 +85,9 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     private fun loadCategories() {
         showError(null)
         setLoading(true)
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val response = ApiClient.categoryApi.getCategories()
-                if (response.isSuccessful && response.body() != null) {
-                    categoryAdapter.updateData(response.body()!!)
-                } else {
-                    showError(extractErrorMessage(response))
-                }
-            } catch (e: Exception) {
-                showError("Network error: ${e.message}")
-            } finally {
-                setLoading(false)
-            }
+        dashboardViewModel.refreshCategories { success, error ->
+            if (!success) showError(error)
+            setLoading(false)
         }
     }
 

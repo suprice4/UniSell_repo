@@ -8,11 +8,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.core.ApiClient
+import edu.cit.capendit.unisell.dashboard.DashboardViewModel
 import edu.cit.capendit.unisell.platform.adapter.PlatformAdapter
 import edu.cit.capendit.unisell.platform.model.PlatformRequest
 import edu.cit.capendit.unisell.platform.model.PlatformResponse
@@ -28,7 +30,7 @@ class PlatformFragment : Fragment(R.layout.fragment_platform) {
     private lateinit var progressBarPlatforms: ProgressBar
     private lateinit var rvPlatforms: RecyclerView
 
-    private val platformList = mutableListOf<PlatformResponse>()
+    private val dashboardViewModel: DashboardViewModel by activityViewModels()
     private lateinit var platformAdapter: PlatformAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +43,7 @@ class PlatformFragment : Fragment(R.layout.fragment_platform) {
         rvPlatforms = view.findViewById(R.id.rvPlatforms)
 
         platformAdapter = PlatformAdapter(
-            platformList,
+            mutableListOf(),
             onEdit = { showEditPlatformDialog(it) },
             onDelete = { showDeletePlatformConfirm(it) }
         )
@@ -51,7 +53,8 @@ class PlatformFragment : Fragment(R.layout.fragment_platform) {
 
         btnAddPlatform.setOnClickListener { addPlatform() }
 
-        loadPlatforms()
+        dashboardViewModel.platforms.observe(viewLifecycleOwner) { platformAdapter.updateData(it) }
+        dashboardViewModel.loadPlatformsIfNeeded()
     }
 
     private fun extractErrorMessage(response: Response<*>): String {
@@ -82,19 +85,9 @@ class PlatformFragment : Fragment(R.layout.fragment_platform) {
     private fun loadPlatforms() {
         showPlatformError(null)
         setPlatformLoading(true)
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val response = ApiClient.platformApi.getPlatforms()
-                if (response.isSuccessful && response.body() != null) {
-                    platformAdapter.updateData(response.body()!!)
-                } else {
-                    showPlatformError(extractErrorMessage(response))
-                }
-            } catch (e: Exception) {
-                showPlatformError("Network error: ${e.message}")
-            } finally {
-                setPlatformLoading(false)
-            }
+        dashboardViewModel.refreshPlatforms { success, error ->
+            if (!success) showPlatformError(error)
+            setPlatformLoading(false)
         }
     }
 

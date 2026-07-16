@@ -11,12 +11,14 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.category.model.CategoryResponse
 import edu.cit.capendit.unisell.core.ApiClient
+import edu.cit.capendit.unisell.dashboard.DashboardViewModel
 import edu.cit.capendit.unisell.inventory.model.ProductPlatformInventoryRequest
 import edu.cit.capendit.unisell.platform.model.PlatformResponse
 import edu.cit.capendit.unisell.product.adapter.ProductAdapter
@@ -33,9 +35,10 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
     private lateinit var progressBarProducts: ProgressBar
     private lateinit var rvProducts: RecyclerView
 
+    private val dashboardViewModel: DashboardViewModel by activityViewModels()
     private val productList = mutableListOf<ProductResponse>()
-    private val categoryList = mutableListOf<CategoryResponse>() // fetched independently for the add/edit dialog spinner
-    private val platformList = mutableListOf<PlatformResponse>() // fetched independently for the allocation spinner
+    private val categoryList = mutableListOf<CategoryResponse>() // mirrors DashboardViewModel.categories, for the add/edit dialog spinner
+    private val platformList = mutableListOf<PlatformResponse>() // mirrors DashboardViewModel.platforms, for the allocation spinner + adapter
     private lateinit var productAdapter: ProductAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,34 +64,19 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
 
         btnAddProduct.setOnClickListener { showAddProductDialog() }
 
-        // Fetch categories and platforms first (needed for dialog + adapter), then products.
-        loadCategoriesThenPlatformsThenProducts()
-    }
-
-    private fun loadCategoriesThenPlatformsThenProducts() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val catResponse = ApiClient.categoryApi.getCategories()
-                if (catResponse.isSuccessful && catResponse.body() != null) {
-                    categoryList.clear()
-                    categoryList.addAll(catResponse.body()!!)
-                }
-            } catch (e: Exception) {
-                // Non-fatal: product list/dialog will just show "no categories" state if this silently fails
-            }
-
-            try {
-                val platResponse = ApiClient.platformApi.getPlatforms()
-                if (platResponse.isSuccessful && platResponse.body() != null) {
-                    platformList.clear()
-                    platformList.addAll(platResponse.body()!!)
-                }
-            } catch (e: Exception) {
-                // Non-fatal: allocation spinner will just show empty if this silently fails
-            }
-
-            loadProducts()
+        dashboardViewModel.categories.observe(viewLifecycleOwner) {
+            categoryList.clear()
+            categoryList.addAll(it)
         }
+        dashboardViewModel.platforms.observe(viewLifecycleOwner) {
+            platformList.clear()
+            platformList.addAll(it)
+            productAdapter.notifyDataSetChanged() // platformList feeds already-bound rows (allocation names), so force a redraw if platforms arrive after products do
+        }
+        dashboardViewModel.loadCategoriesIfNeeded()
+        dashboardViewModel.loadPlatformsIfNeeded()
+
+        loadProducts()
     }
 
     private fun extractErrorMessage(response: Response<*>): String {

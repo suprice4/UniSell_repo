@@ -30,7 +30,12 @@ export function useOrders() {
   const [returnReasonByOrderId, setReturnReasonByOrderId] = useState({});
   const [selectedReturnItemIds, setSelectedReturnItemIds] = useState([]);
 
+  const [shipmentTrackingByOrderId, setShipmentTrackingByOrderId] = useState({});
+  const [shipmentCourierByOrderId, setShipmentCourierByOrderId] = useState({});
+
   const [newOrderPlatformId, setNewOrderPlatformId] = useState("");
+  const [newOrderCustomerName, setNewOrderCustomerName] = useState("");
+  const [newOrderCustomerAddress, setNewOrderCustomerAddress] = useState("");
   const [newOrderItems, setNewOrderItems] = useState([emptyItemRow()]);
   const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [createOrderError, setCreateOrderError] = useState("");
@@ -144,6 +149,39 @@ export function useOrders() {
     }
   };
 
+  const setShipmentTracking = (orderId, value) => {
+    setShipmentTrackingByOrderId((prev) => ({ ...prev, [orderId]: value }));
+  };
+
+  const setShipmentCourier = (orderId, value) => {
+    setShipmentCourierByOrderId((prev) => ({ ...prev, [orderId]: value }));
+  };
+
+  const handleUpdateShipmentDetails = async (orderId) => {
+    const trackingNumber = (shipmentTrackingByOrderId[orderId] || "").trim();
+    const courierName = (shipmentCourierByOrderId[orderId] || "").trim();
+
+    if (!trackingNumber) {
+      setOrderActionError("Tracking number is required.");
+      return;
+    }
+    if (!courierName) {
+      setOrderActionError("Courier name is required.");
+      return;
+    }
+
+    setOrderActionError("");
+    setOrderActionLoadingId(orderId);
+    try {
+      const res = await ordersApi.updateShipmentDetails(orderId, trackingNumber, courierName);
+      setOrders(orders.map((o) => (o.id === orderId ? res.data : o)));
+    } catch (err) {
+      setOrderActionError(getErrorMessage(err, "Failed to update shipment details."));
+    } finally {
+      setOrderActionLoadingId(null);
+    }
+  };
+
   const addOrderItemRow = () => {
     setNewOrderItems((prev) => [...prev, emptyItemRow()]);
   };
@@ -160,6 +198,8 @@ export function useOrders() {
 
   const resetCreateOrderForm = () => {
     setNewOrderPlatformId("");
+    setNewOrderCustomerName("");
+    setNewOrderCustomerAddress("");
     setNewOrderItems([emptyItemRow()]);
   };
 
@@ -169,6 +209,14 @@ export function useOrders() {
 
     if (!newOrderPlatformId) {
       setCreateOrderError("Select a platform.");
+      return;
+    }
+    if (!newOrderCustomerName.trim()) {
+      setCreateOrderError("Customer name is required.");
+      return;
+    }
+    if (!newOrderCustomerAddress.trim()) {
+      setCreateOrderError("Customer address is required.");
       return;
     }
     const items = newOrderItems
@@ -181,7 +229,12 @@ export function useOrders() {
 
     setCreateOrderLoading(true);
     try {
-      const res = await ordersApi.create({ platformId: Number(newOrderPlatformId), items });
+      const res = await ordersApi.create({
+        platformId: Number(newOrderPlatformId),
+        customerName: newOrderCustomerName.trim(),
+        customerAddress: newOrderCustomerAddress.trim(),
+        items,
+      });
       setOrders((prev) => [res.data, ...prev]);
       resetCreateOrderForm();
     } catch (err) {
@@ -210,8 +263,17 @@ export function useOrders() {
     setReturnReason,
     handleProcessReturn,
     handleMarkUncollected,
+    shipmentTrackingByOrderId,
+    shipmentCourierByOrderId,
+    setShipmentTracking,
+    setShipmentCourier,
+    handleUpdateShipmentDetails,
     newOrderPlatformId,
     setNewOrderPlatformId,
+    newOrderCustomerName,
+    setNewOrderCustomerName,
+    newOrderCustomerAddress,
+    setNewOrderCustomerAddress,
     newOrderItems,
     addOrderItemRow,
     removeOrderItemRow,

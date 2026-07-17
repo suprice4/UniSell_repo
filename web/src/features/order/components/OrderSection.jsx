@@ -28,8 +28,17 @@ function OrderSection() {
     setReturnReason,
     handleProcessReturn,
     handleMarkUncollected,
+    shipmentTrackingByOrderId,
+    shipmentCourierByOrderId,
+    setShipmentTracking,
+    setShipmentCourier,
+    handleUpdateShipmentDetails,
     newOrderPlatformId,
     setNewOrderPlatformId,
+    newOrderCustomerName,
+    setNewOrderCustomerName,
+    newOrderCustomerAddress,
+    setNewOrderCustomerAddress,
     newOrderItems,
     addOrderItemRow,
     removeOrderItemRow,
@@ -63,6 +72,24 @@ function OrderSection() {
               </option>
             ))}
           </select>
+
+          <input
+            type="text"
+            value={newOrderCustomerName}
+            onChange={(e) => setNewOrderCustomerName(e.target.value)}
+            placeholder="Customer name"
+            required
+            style={{ padding: "8px" }}
+          />
+
+          <input
+            type="text"
+            value={newOrderCustomerAddress}
+            onChange={(e) => setNewOrderCustomerAddress(e.target.value)}
+            placeholder="Customer address"
+            required
+            style={{ padding: "8px" }}
+          />
 
           {newOrderItems.map((row, index) => (
             <div key={index} style={{ display: "flex", gap: "8px" }}>
@@ -138,6 +165,20 @@ function OrderSection() {
 
               {expandedOrderId === order.id && (
                 <div style={{ marginTop: "8px", paddingLeft: "16px" }}>
+                  {(order.customerName || order.customerAddress) && (
+                    <div style={{ marginBottom: "12px", fontSize: "14px", color: "#333" }}>
+                      {order.customerName && <div>Customer: {order.customerName}</div>}
+                      {order.customerAddress && <div>Address: {order.customerAddress}</div>}
+                    </div>
+                  )}
+
+                  {(order.trackingNumber || order.courierName) && (
+                    <div style={{ marginBottom: "12px", fontSize: "14px", color: "#333" }}>
+                      {order.courierName && <div>Courier: {order.courierName}</div>}
+                      {order.trackingNumber && <div>Tracking #: {order.trackingNumber}</div>}
+                    </div>
+                  )}
+
                   {itemsLoading && <p>Loading items...</p>}
                   {itemsError && <p style={{ color: "red" }}>{itemsError}</p>}
 
@@ -193,6 +234,32 @@ function OrderSection() {
                       </button>
                     )}
                   </div>
+
+                  {order.status === "SHIPPED" && (
+                    <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                      <input
+                        type="text"
+                        placeholder="Courier name"
+                        value={shipmentCourierByOrderId[order.id] ?? order.courierName ?? ""}
+                        onChange={(e) => setShipmentCourier(order.id, e.target.value)}
+                        style={{ flex: 1, padding: "6px" }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Tracking number"
+                        value={shipmentTrackingByOrderId[order.id] ?? order.trackingNumber ?? ""}
+                        onChange={(e) => setShipmentTracking(order.id, e.target.value)}
+                        style={{ flex: 1, padding: "6px" }}
+                      />
+                      <button
+                        onClick={() => handleUpdateShipmentDetails(order.id)}
+                        disabled={orderActionLoadingId === order.id}
+                        style={{ padding: "6px 12px" }}
+                      >
+                        Save Shipment Details
+                      </button>
+                    </div>
+                  )}
 
                   {order.status !== "RETURNED" && (
                     <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center" }}>

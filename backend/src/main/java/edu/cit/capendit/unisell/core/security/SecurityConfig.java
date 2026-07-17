@@ -4,6 +4,7 @@ import edu.cit.capendit.unisell.auth.config.AdminProperties;
 import edu.cit.capendit.unisell.auth.model.Role;
 import edu.cit.capendit.unisell.auth.model.User;
 import edu.cit.capendit.unisell.auth.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
+
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
@@ -46,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of(frontendUrl));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setExposedHeaders(List.of("X-New-Token"));

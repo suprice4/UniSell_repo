@@ -64,6 +64,13 @@ public class OrderController {
             return ResponseEntity.status(404).body("Platform not found");
         }
 
+        if (request.getCustomerName() == null || request.getCustomerName().isBlank()) {
+            return ResponseEntity.badRequest().body("Customer name is required");
+        }
+        if (request.getCustomerAddress() == null || request.getCustomerAddress().isBlank()) {
+            return ResponseEntity.badRequest().body("Customer address is required");
+        }
+
         Map<Product, Integer> requestedItems = new HashMap<>();
         for (OrderItemRequest itemReq : request.getItems()) {
             Product product = productRepository.findByIdAndVendorEmail(itemReq.getProductId(), vendorEmail)
@@ -78,6 +85,8 @@ public class OrderController {
         order.setPlatform(platform);
         // vendor is set server-side from the authenticated platform owner, never trusted from the request body
         order.setVendor(platform.getVendor());
+        order.setCustomerName(request.getCustomerName());
+        order.setCustomerAddress(request.getCustomerAddress());
 
         try {
             Order created = orderService.createOrder(order, requestedItems, vendorEmail);
@@ -140,6 +149,28 @@ public class OrderController {
             }
             // IN_TRANSIT / DELIVERED handling will be filled in once the full shipment feature lands
             return ResponseEntity.badRequest().body("Unsupported shipment status: " + request.getStatus());
+        } catch (IllegalStateException e) {
+            return handleError(e);
+        }
+    }
+
+    @PutMapping("/{id}/shipment-details")
+    public ResponseEntity<?> updateShipmentDetails(@PathVariable Long id,
+                                                     @RequestBody ShipmentDetailsRequest request,
+                                                     Authentication authentication) {
+        String vendorEmail = authentication.getName();
+
+        if (request.getTrackingNumber() == null || request.getTrackingNumber().isBlank()) {
+            return ResponseEntity.badRequest().body("Tracking number is required");
+        }
+        if (request.getCourierName() == null || request.getCourierName().isBlank()) {
+            return ResponseEntity.badRequest().body("Courier name is required");
+        }
+
+        try {
+            Order updated = orderService.updateShipmentDetails(
+                    id, request.getTrackingNumber(), request.getCourierName(), vendorEmail);
+            return ResponseEntity.ok(OrderResponse.fromEntity(updated));
         } catch (IllegalStateException e) {
             return handleError(e);
         }

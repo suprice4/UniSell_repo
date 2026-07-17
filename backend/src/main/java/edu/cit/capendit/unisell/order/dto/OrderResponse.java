@@ -12,6 +12,10 @@ public class OrderResponse {
     private Long vendorId;
     private Long platformId;
     private String platformName;
+    private String customerName;
+    private String customerAddress;
+    private String trackingNumber;
+    private String courierName;
     private OrderStatus status;
     private PaymentStatus paymentStatus;
     private ShipmentStatus shipmentStatus;
@@ -28,6 +32,10 @@ public class OrderResponse {
         dto.vendorId = order.getVendor().getId();
         dto.platformId = order.getPlatform().getId();
         dto.platformName = order.getPlatform().getName();
+        dto.customerName = order.getCustomerName();
+        dto.customerAddress = order.getCustomerAddress();
+        dto.trackingNumber = order.getTrackingNumber();
+        dto.courierName = order.getCourierName();
         dto.status = order.getStatus();
         dto.paymentStatus = order.getPaymentStatus();
         dto.shipmentStatus = order.getShipmentStatus();
@@ -47,6 +55,18 @@ public class OrderResponse {
 
     public String getPlatformName() { return platformName; }
     public void setPlatformName(String platformName) { this.platformName = platformName; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getCustomerAddress() { return customerAddress; }
+    public void setCustomerAddress(String customerAddress) { this.customerAddress = customerAddress; }
+
+    public String getTrackingNumber() { return trackingNumber; }
+    public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
+
+    public String getCourierName() { return courierName; }
+    public void setCourierName(String courierName) { this.courierName = courierName; }
 
     public OrderStatus getStatus() { return status; }
     public void setStatus(OrderStatus status) { this.status = status; }

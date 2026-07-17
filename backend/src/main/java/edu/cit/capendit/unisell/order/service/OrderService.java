@@ -151,6 +151,20 @@ public class OrderService {
         return order;
     }
 
+    @Transactional
+    public Order updateShipmentDetails(Long orderId, String trackingNumber, String courierName, String vendorEmail) {
+        Order order = orderRepository.findByIdAndVendorEmail(orderId, vendorEmail)
+                .orElseThrow(() -> new IllegalStateException("Order not found"));
+
+        if (order.getStatus() != OrderStatus.SHIPPED) {
+            throw new IllegalStateException("Shipment details can only be set for orders with status SHIPPED");
+        }
+
+        order.setTrackingNumber(trackingNumber);
+        order.setCourierName(courierName);
+        return orderRepository.save(order);
+    }
+
     // orderItemIds: null/empty = every item on the order gets a ReturnRecord (full return).
     // Non-empty = only the specified OrderItem IDs are marked returned (partial return).
     @Transactional

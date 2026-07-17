@@ -21,6 +21,23 @@ public class Order {
     @JoinColumn(name = "platform_id", nullable = false)
     private Platform platform;
 
+    // Nullable at the DB/entity level so ddl-auto=update doesn't fail against
+    // existing populated rows. "Required" is enforced at request validation
+    // time in OrderController for new order creation.
+    @Column(name = "customer_name")
+    private String customerName;
+
+    @Column(name = "customer_address")
+    private String customerAddress;
+
+    // Same nullable-at-DB reasoning as above. Set via the dedicated
+    // /shipment-details endpoint once an order reaches SHIPPED status.
+    @Column(name = "tracking_number")
+    private String trackingNumber;
+
+    @Column(name = "courier_name")
+    private String courierName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status = OrderStatus.PENDING;
@@ -49,6 +66,18 @@ public class Order {
 
     public Platform getPlatform() { return platform; }
     public void setPlatform(Platform platform) { this.platform = platform; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getCustomerAddress() { return customerAddress; }
+    public void setCustomerAddress(String customerAddress) { this.customerAddress = customerAddress; }
+
+    public String getTrackingNumber() { return trackingNumber; }
+    public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
+
+    public String getCourierName() { return courierName; }
+    public void setCourierName(String courierName) { this.courierName = courierName; }
 
     public OrderStatus getStatus() { return status; }
     public void setStatus(OrderStatus status) { this.status = status; }

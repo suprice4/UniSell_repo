@@ -4,6 +4,11 @@ import { usePlatforms } from "../../platform/hooks/usePlatforms";
 import { useInventory } from "../../inventory/hooks/useInventory";
 import InventoryPanel from "../../inventory/components/InventoryPanel";
 
+const DEFAULT_LOW_STOCK_THRESHOLD = 5;
+
+const isLowStock = (product) =>
+  product.quantity < (product.lowStockThreshold ?? DEFAULT_LOW_STOCK_THRESHOLD);
+
 function ProductSection() {
   const {
     products,
@@ -199,6 +204,21 @@ function ProductSection() {
                     <span style={{ flex: 1 }}>
                       {product.name} ({product.sku}) — ${product.price} — qty {product.quantity} —{" "}
                       {product.categoryName}
+                      {isLowStock(product) && (
+                        <span
+                          style={{
+                            marginLeft: "8px",
+                            padding: "2px 8px",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            fontWeight: "bold",
+                            color: "#fff",
+                            backgroundColor: "#c0392b",
+                          }}
+                        >
+                          LOW STOCK
+                        </span>
+                      )}
                     </span>
                     <button onClick={() => startEditProduct(product)} style={{ padding: "6px 12px" }}>
                       Edit

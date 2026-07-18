@@ -105,7 +105,7 @@ public class OrderService {
         // Full-order RETURNED via generic status update covers all items.
         // For partial returns, use processReturn() instead.
         if (newStatus == OrderStatus.RETURNED) {
-            generateReturnRecords(order, null, null);
+            generateReturnRecords(order, null, null, vendorEmail);
         }
 
         return orderRepository.save(order);
@@ -131,7 +131,7 @@ public class OrderService {
         order.setStatus(OrderStatus.RETURNED);
         orderRepository.save(order);
 
-        generateReturnRecords(order, orderItemIds, reason);
+        generateReturnRecords(order, orderItemIds, reason, vendorEmail);
         return order;
     }
 
@@ -147,7 +147,7 @@ public class OrderService {
         order.setStatus(OrderStatus.RETURNED);
         orderRepository.save(order);
 
-        generateReturnRecords(order, null, "Shipment uncollected");
+        generateReturnRecords(order, null, "Shipment uncollected", vendorEmail);
         return order;
     }
 
@@ -168,7 +168,7 @@ public class OrderService {
     // orderItemIds: null/empty = every item on the order gets a ReturnRecord (full return).
     // Non-empty = only the specified OrderItem IDs are marked returned (partial return).
     @Transactional
-    public void generateReturnRecords(Order order, List<Long> orderItemIds, String reason) {
+    public void generateReturnRecords(Order order, List<Long> orderItemIds, String reason, String vendorEmail) {
         List<OrderItem> items = orderItemRepository.findAllByOrderId(order.getId());
 
         for (OrderItem item : items) {
@@ -178,7 +178,28 @@ public class OrderService {
                 record.setOrderItem(item);
                 record.setReason(reason);
                 returnRecordRepository.save(record);
+
+                // FR-005: restore platform-allocated stock for this returned item only,
+                // so a partial return doesn't restore stock for items not selected.
+                Inventory inventory = inventoryRepository
+                        .findByProductIdAndPlatformIdAndProductVendorEmail(
+                                item.getProduct().getId(), order.getPlatform().getId(), vendorEmail)
+                        .orElseThrow(() -> new IllegalStateException(
+                                "No inventory allocation found for product '" + item.getProduct().getName()
+                                        + "' on platform '" + order.getPlatform().getName()
+                                        + "' while processing return"));
+
+                inventory.setAllocatedQuantity(inventory.getAllocatedQuantity() + item.getQuantity());
+                inventoryRepository.save(inventory);
             }
+        }
+
+        // FR-024: payment status is order-level/binary (not a per-item dollar calc, per SRS wording).
+        // Only auto-refund if payment was actually RECEIVED — a PENDING order's payment status
+        // is left untouched, since payment was never collected in the first place.
+        if (order.getPaymentStatus() == PaymentStatus.RECEIVED) {
+            order.setPaymentStatus(PaymentStatus.REFUNDED);
+            orderRepository.save(order);
         }
     }
 

@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { productApi } from "../api/productApi";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { useDashboard } from "../../dashboard/context/DashboardContext";
 
 export function useProducts() {
-  const [products, setProducts] = useState([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [productListError, setProductListError] = useState("");
+  const { products, setProducts, loadingProducts, productsError } = useDashboard();
 
   const [newProductName, setNewProductName] = useState("");
   const [newProductSku, setNewProductSku] = useState("");
@@ -16,6 +15,7 @@ export function useProducts() {
   const [addProductError, setAddProductError] = useState("");
 
   const [deletingProductId, setDeletingProductId] = useState(null);
+  const [deleteProductListError, setDeleteProductListError] = useState("");
 
   const [editingProductId, setEditingProductId] = useState(null);
   const [editProductName, setEditProductName] = useState("");
@@ -25,23 +25,6 @@ export function useProducts() {
   const [editProductCategoryId, setEditProductCategoryId] = useState("");
   const [editProductLoading, setEditProductLoading] = useState(false);
   const [editProductError, setEditProductError] = useState("");
-
-  const fetchProducts = async () => {
-    setProductListError("");
-    setLoadingProducts(true);
-    try {
-      const res = await productApi.list();
-      setProducts(res.data);
-    } catch (err) {
-      setProductListError(getErrorMessage(err, "Failed to load products."));
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
@@ -106,13 +89,13 @@ export function useProducts() {
   const handleDeleteProduct = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this product?");
     if (!confirmed) return;
-    setProductListError("");
+    setDeleteProductListError("");
     setDeletingProductId(id);
     try {
       await productApi.remove(id);
       setProducts(products.filter((p) => p.id !== id));
     } catch (err) {
-      setProductListError(getErrorMessage(err, "Failed to delete product."));
+      setDeleteProductListError(getErrorMessage(err, "Failed to delete product."));
     } finally {
       setDeletingProductId(null);
     }
@@ -121,7 +104,7 @@ export function useProducts() {
   return {
     products,
     loadingProducts,
-    productListError,
+    productListError: productsError || deleteProductListError,
     newProductName,
     setNewProductName,
     newProductSku,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import api from "../../../core/api/axios";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
 
@@ -8,6 +8,8 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sessionExpired = searchParams.get("reason") === "session_expired";
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,6 +40,22 @@ function Login() {
   return (
     <div style={{ maxWidth: "400px", margin: "60px auto", fontFamily: "sans-serif" }}>
       <h2>Log In</h2>
+
+      {sessionExpired && (
+        <p
+          style={{
+            backgroundColor: "#fdecea",
+            border: "1px solid #c0392b",
+            borderRadius: "4px",
+            padding: "10px",
+            color: "#c0392b",
+            fontSize: "14px",
+          }}
+        >
+          Your session expired — please log in again.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "12px" }}>
           <label>Email</label>

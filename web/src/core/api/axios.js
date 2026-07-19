@@ -14,12 +14,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-api.interceptors.response.use((response) => {
-  const newToken = response.headers["x-new-token"];
-  if (newToken) {
-    localStorage.setItem("token", newToken);
+api.interceptors.response.use(
+  (response) => {
+    const newToken = response.headers["x-new-token"];
+    if (newToken) {
+      localStorage.setItem("token", newToken);
+    }
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login?reason=session_expired";
+    }
+    return Promise.reject(error);
   }
-  return response;
-});
+);
 
 export default api;

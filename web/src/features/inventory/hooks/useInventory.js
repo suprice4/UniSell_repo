@@ -13,6 +13,11 @@ export function useInventory() {
   const [allocLoading, setAllocLoading] = useState(false);
   const [allocError, setAllocError] = useState("");
 
+  const [editPlatformId, setEditPlatformId] = useState(null);
+  const [editQuantity, setEditQuantity] = useState("");
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState("");
+
   const fetchInventoryForProduct = async (productId) => {
     setInventoryError("");
     setLoadingInventoryFor(productId);
@@ -35,6 +40,9 @@ export function useInventory() {
     setAllocPlatformId("");
     setAllocQuantity("");
     setAllocError("");
+    setEditPlatformId(null);
+    setEditQuantity("");
+    setEditError("");
     fetchInventoryForProduct(productId);
   };
 
@@ -76,6 +84,38 @@ export function useInventory() {
     }
   };
 
+  const startEditAllocation = (platformId, currentQuantity) => {
+    setEditPlatformId(platformId);
+    setEditQuantity(String(currentQuantity));
+    setEditError("");
+  };
+
+  const cancelEditAllocation = () => {
+    setEditPlatformId(null);
+    setEditQuantity("");
+    setEditError("");
+  };
+
+  const handleUpdateAllocation = async (productId, platformId, quantity) => {
+    setEditError("");
+    setEditLoading(true);
+    try {
+      const res = await inventoryApi.update(productId, platformId, parseInt(quantity, 10));
+      setInventoryByProduct((prev) => ({
+        ...prev,
+        [productId]: (prev[productId] || []).map((a) =>
+          a.platformId === platformId ? res.data : a
+        ),
+      }));
+      setEditPlatformId(null);
+      setEditQuantity("");
+    } catch (err) {
+      setEditError(getErrorMessage(err, "Failed to update allocation."));
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   return {
     expandedProductId,
     inventoryByProduct,
@@ -90,5 +130,13 @@ export function useInventory() {
     toggleExpandProduct,
     handleAllocate,
     handleDeleteAllocation,
+    editPlatformId,
+    editQuantity,
+    setEditQuantity,
+    editLoading,
+    editError,
+    startEditAllocation,
+    cancelEditAllocation,
+    handleUpdateAllocation,
   };
 }

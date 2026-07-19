@@ -60,6 +60,14 @@ function ProductSection() {
     toggleExpandProduct,
     handleAllocate,
     handleDeleteAllocation,
+    editPlatformId,
+    editQuantity,
+    setEditQuantity,
+    editLoading,
+    editError,
+    startEditAllocation,
+    cancelEditAllocation,
+    handleUpdateAllocation,
   } = useInventory();
 
   return (
@@ -247,6 +255,14 @@ function ProductSection() {
                   allocError={allocError}
                   onAllocate={handleAllocate}
                   onDeleteAllocation={handleDeleteAllocation}
+                  editPlatformId={editPlatformId}
+                  editQuantity={editQuantity}
+                  setEditQuantity={setEditQuantity}
+                  editLoading={editLoading}
+                  editError={editError}
+                  onStartEdit={startEditAllocation}
+                  onCancelEdit={cancelEditAllocation}
+                  onUpdateAllocation={handleUpdateAllocation}
                 />
               )}
             </li>

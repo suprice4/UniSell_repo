@@ -11,6 +11,14 @@ function InventoryPanel({
   allocError,
   onAllocate,
   onDeleteAllocation,
+  editPlatformId,
+  editQuantity,
+  setEditQuantity,
+  editLoading,
+  editError,
+  onStartEdit,
+  onCancelEdit,
+  onUpdateAllocation,
 }) {
   return (
     <div
@@ -31,28 +39,73 @@ function InventoryPanel({
           {(allocations || []).length === 0 && (
             <li style={{ fontSize: "0.9em", color: "#888" }}>No allocations yet.</li>
           )}
-          {(allocations || []).map((alloc) => (
-            <li
-              key={alloc.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: "0.9em",
-                padding: "4px 0",
-              }}
-            >
-              <span style={{ flex: 1 }}>
-                {alloc.platformName}: {alloc.allocatedQuantity}
-              </span>
-              <button
-                onClick={() => onDeleteAllocation(productId, alloc.platformId)}
-                style={{ padding: "4px 8px", fontSize: "0.85em" }}
+          {(allocations || []).map((alloc) => {
+            const isEditing = editPlatformId === alloc.platformId;
+            return (
+              <li
+                key={alloc.id}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                  fontSize: "0.9em",
+                  padding: "4px 0",
+                }}
               >
-                Remove
-              </button>
-            </li>
-          ))}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  {isEditing ? (
+                    <>
+                      <span style={{ flex: 1 }}>{alloc.platformName}:</span>
+                      <input
+                        type="number"
+                        value={editQuantity}
+                        onChange={(e) => setEditQuantity(e.target.value)}
+                        style={{ padding: "4px", width: "70px" }}
+                        autoFocus
+                      />
+                      <button
+                        onClick={() =>
+                          onUpdateAllocation(productId, alloc.platformId, editQuantity)
+                        }
+                        disabled={editLoading}
+                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                      >
+                        {editLoading ? "..." : "Save"}
+                      </button>
+                      <button
+                        onClick={onCancelEdit}
+                        disabled={editLoading}
+                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span style={{ flex: 1 }}>
+                        {alloc.platformName}: {alloc.allocatedQuantity}
+                      </span>
+                      <button
+                        onClick={() => onStartEdit(alloc.platformId, alloc.allocatedQuantity)}
+                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => onDeleteAllocation(productId, alloc.platformId)}
+                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                      >
+                        Remove
+                      </button>
+                    </>
+                  )}
+                </div>
+                {isEditing && editError && (
+                  <p style={{ color: "red", fontSize: "0.85em", margin: 0 }}>{editError}</p>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
 

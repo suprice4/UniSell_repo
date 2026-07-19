@@ -1,6 +1,5 @@
 import { useOrders } from "../hooks/useOrders";
-import { usePlatforms } from "../../platform/hooks/usePlatforms";
-import { useProducts } from "../../product/hooks/useProducts";
+import { useDashboard } from "../../dashboard/context/DashboardContext";
 
 const NEXT_STATUS = {
   PENDING: "PROCESSING",
@@ -48,8 +47,7 @@ function OrderSection() {
     handleCreateOrderSubmit,
   } = useOrders();
 
-  const { platforms } = usePlatforms();
-  const { products } = useProducts();
+  const { platforms, products } = useDashboard();
 
   return (
     <div>

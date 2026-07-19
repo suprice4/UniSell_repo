@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { inventoryApi } from "../api/inventoryApi";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { useDashboard } from "../../dashboard/context/DashboardContext";
 
 export function useInventory() {
+  const { orderCreatedTick, upsertAllocation, removeAllocation } = useDashboard();
+
   const [expandedProductId, setExpandedProductId] = useState(null);
   const [inventoryByProduct, setInventoryByProduct] = useState({});
   const [loadingInventoryFor, setLoadingInventoryFor] = useState(null);
@@ -30,6 +33,19 @@ export function useInventory() {
       setLoadingInventoryFor(null);
     }
   };
+
+  // Refetches the currently-expanded product's allocations whenever any
+  // order is created, so the panel reflects server-side decrements without
+  // needing to collapse/re-expand. Intentionally only depends on
+  // orderCreatedTick — toggleExpandProduct already handles the
+  // fetch-on-expand case directly, so also depending on expandedProductId
+  // here would cause a redundant double-fetch on every expand.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (expandedProductId) {
+      fetchInventoryForProduct(expandedProductId);
+    }
+  }, [orderCreatedTick]);
 
   const toggleExpandProduct = (productId) => {
     if (expandedProductId === productId) {
@@ -60,6 +76,7 @@ export function useInventory() {
         ...prev,
         [productId]: [...(prev[productId] || []), res.data],
       }));
+      upsertAllocation(productId, res.data);
       setAllocPlatformId("");
       setAllocQuantity("");
     } catch (err) {
@@ -79,6 +96,7 @@ export function useInventory() {
         ...prev,
         [productId]: (prev[productId] || []).filter((a) => a.platformId !== platformId),
       }));
+      removeAllocation(productId, platformId);
     } catch (err) {
       setInventoryError(getErrorMessage(err, "Failed to remove allocation."));
     }
@@ -107,6 +125,7 @@ export function useInventory() {
           a.platformId === platformId ? res.data : a
         ),
       }));
+      upsertAllocation(productId, res.data);
       setEditPlatformId(null);
       setEditQuantity("");
     } catch (err) {

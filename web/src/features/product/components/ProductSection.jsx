@@ -244,6 +244,7 @@ function ProductSection() {
               {expandedProductId === product.id && (
                 <InventoryPanel
                   productId={product.id}
+                  product={product}
                   platforms={platforms}
                   allocations={inventoryByProduct[product.id]}
                   loading={loadingInventoryFor === product.id}

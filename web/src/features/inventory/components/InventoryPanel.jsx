@@ -1,5 +1,8 @@
+import { isLowStockAllocation } from "../../product/utils/lowStock";
+
 function InventoryPanel({
   productId,
+  product,
   platforms,
   allocations,
   loading,
@@ -84,6 +87,21 @@ function InventoryPanel({
                     <>
                       <span style={{ flex: 1 }}>
                         {alloc.platformName}: {alloc.allocatedQuantity}
+                        {isLowStockAllocation(alloc, product) && (
+                          <span
+                            style={{
+                              marginLeft: "8px",
+                              padding: "2px 8px",
+                              borderRadius: "4px",
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              color: "#fff",
+                              backgroundColor: "#c0392b",
+                            }}
+                          >
+                            LOW STOCK
+                          </span>
+                        )}
                       </span>
                       <button
                         onClick={() => onStartEdit(alloc.platformId, alloc.allocatedQuantity)}

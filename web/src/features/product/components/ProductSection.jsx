@@ -3,11 +3,7 @@ import { useCategories } from "../../category/hooks/useCategories";
 import { usePlatforms } from "../../platform/hooks/usePlatforms";
 import { useInventory } from "../../inventory/hooks/useInventory";
 import InventoryPanel from "../../inventory/components/InventoryPanel";
-
-const DEFAULT_LOW_STOCK_THRESHOLD = 5;
-
-const isLowStock = (product) =>
-  product.quantity < (product.lowStockThreshold ?? DEFAULT_LOW_STOCK_THRESHOLD);
+import { isLowStock } from "../utils/lowStock";
 
 function ProductSection() {
   const {

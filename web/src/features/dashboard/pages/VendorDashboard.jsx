@@ -3,11 +3,7 @@ import PlatformSection from "../../platform/components/PlatformSection";
 import ProductSection from "../../product/components/ProductSection";
 import OrderSection from "../../order/components/OrderSection";
 import { useProducts } from "../../product/hooks/useProducts";
-
-const DEFAULT_LOW_STOCK_THRESHOLD = 5;
-
-const isLowStock = (product) =>
-  product.quantity < (product.lowStockThreshold ?? DEFAULT_LOW_STOCK_THRESHOLD);
+import { isLowStock, DEFAULT_LOW_STOCK_THRESHOLD } from "../../product/utils/lowStock";
 
 function VendorDashboard() {
   // Separate useProducts() call from ProductSection's own — this hook is

@@ -1,39 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { platformApi } from "../api/platformApi";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { useDashboard } from "../../dashboard/context/DashboardContext";
 
 export function usePlatforms() {
-  const [platforms, setPlatforms] = useState([]);
-  const [loadingPlatforms, setLoadingPlatforms] = useState(true);
-  const [platformListError, setPlatformListError] = useState("");
+  const { platforms, setPlatforms, loadingPlatforms, platformsError } = useDashboard();
 
   const [newPlatformName, setNewPlatformName] = useState("");
   const [addPlatformLoading, setAddPlatformLoading] = useState(false);
   const [addPlatformError, setAddPlatformError] = useState("");
 
   const [deletingPlatformId, setDeletingPlatformId] = useState(null);
+  const [deletePlatformError, setDeletePlatformError] = useState("");
 
   const [editingPlatformId, setEditingPlatformId] = useState(null);
   const [editPlatformName, setEditPlatformName] = useState("");
   const [editPlatformLoading, setEditPlatformLoading] = useState(false);
   const [editPlatformError, setEditPlatformError] = useState("");
-
-  const fetchPlatforms = async () => {
-    setPlatformListError("");
-    setLoadingPlatforms(true);
-    try {
-      const res = await platformApi.list();
-      setPlatforms(res.data);
-    } catch (err) {
-      setPlatformListError(getErrorMessage(err, "Failed to load platforms."));
-    } finally {
-      setLoadingPlatforms(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPlatforms();
-  }, []);
 
   const handleAddPlatform = async (e) => {
     e.preventDefault();
@@ -80,13 +63,13 @@ export function usePlatforms() {
   const handleDeletePlatform = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this platform?");
     if (!confirmed) return;
-    setPlatformListError("");
+    setDeletePlatformError("");
     setDeletingPlatformId(id);
     try {
       await platformApi.remove(id);
       setPlatforms(platforms.filter((p) => p.id !== id));
     } catch (err) {
-      setPlatformListError(getErrorMessage(err, "Failed to delete platform."));
+      setDeletePlatformError(getErrorMessage(err, "Failed to delete platform."));
     } finally {
       setDeletingPlatformId(null);
     }
@@ -95,7 +78,7 @@ export function usePlatforms() {
   return {
     platforms,
     loadingPlatforms,
-    platformListError,
+    platformListError: platformsError || deletePlatformError,
     newPlatformName,
     setNewPlatformName,
     addPlatformLoading,

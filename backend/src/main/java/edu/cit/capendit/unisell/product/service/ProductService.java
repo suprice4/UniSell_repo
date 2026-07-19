@@ -4,6 +4,7 @@ import edu.cit.capendit.unisell.auth.model.User;
 import edu.cit.capendit.unisell.auth.repository.UserRepository;
 import edu.cit.capendit.unisell.category.model.Category;
 import edu.cit.capendit.unisell.category.repository.CategoryRepository;
+import edu.cit.capendit.unisell.core.exception.VendorResourceNotFoundException;
 import edu.cit.capendit.unisell.product.model.Product;
 import edu.cit.capendit.unisell.product.repository.ProductRepository;
 import edu.cit.capendit.unisell.product.dto.ProductRequest;
@@ -125,9 +126,9 @@ public class ProductService {
         );
     }
 
-    public static class ProductNotFoundException extends RuntimeException {
+    public static class ProductNotFoundException extends VendorResourceNotFoundException {
         public ProductNotFoundException(Long id) {
-            super("Product not found with id: " + id);
+            super("Product", id);
         }
     }
 }

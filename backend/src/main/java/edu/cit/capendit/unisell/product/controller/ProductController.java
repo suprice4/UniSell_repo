@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import edu.cit.capendit.unisell.product.dto.ProductRequest;
 import edu.cit.capendit.unisell.product.dto.ProductResponse;
 import edu.cit.capendit.unisell.product.service.ProductService;
-import edu.cit.capendit.unisell.product.service.ProductService.ProductNotFoundException;
 
 import java.util.List;
 
@@ -28,36 +27,23 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequest request, Authentication authentication) {
-        try {
-            ProductResponse response = productService.createProduct(request, authentication.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request,
+                                                           Authentication authentication) {
+        ProductResponse response = productService.createProduct(request, authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id,
-                                            @RequestBody ProductRequest request,
-                                            Authentication authentication) {
-        try {
-            ProductResponse response = productService.updateProduct(id, request, authentication.getName());
-            return ResponseEntity.ok(response);
-        } catch (ProductService.ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
+                                                           @RequestBody ProductRequest request,
+                                                           Authentication authentication) {
+        ProductResponse response = productService.updateProduct(id, request, authentication.getName());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id, Authentication authentication) {
-        try {
-            productService.deleteProduct(id, authentication.getName());
-            return ResponseEntity.noContent().build();
-        } catch (ProductService.ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id, Authentication authentication) {
+        productService.deleteProduct(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import edu.cit.capendit.unisell.platform.dto.PlatformRequest;
 import edu.cit.capendit.unisell.platform.dto.PlatformResponse;
 import edu.cit.capendit.unisell.platform.service.PlatformService;
-import edu.cit.capendit.unisell.platform.service.PlatformService.PlatformNotFoundException;
 
 import java.util.List;
 
@@ -28,36 +27,23 @@ public class PlatformController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPlatform(@RequestBody PlatformRequest request, Authentication authentication) {
-        try {
-            PlatformResponse response = platformService.createPlatform(request, authentication.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<PlatformResponse> createPlatform(@RequestBody PlatformRequest request,
+                                                             Authentication authentication) {
+        PlatformResponse response = platformService.createPlatform(request, authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePlatform(@PathVariable Long id,
-                                             @RequestBody PlatformRequest request,
-                                             Authentication authentication) {
-        try {
-            PlatformResponse response = platformService.updatePlatform(id, request, authentication.getName());
-            return ResponseEntity.ok(response);
-        } catch (PlatformService.PlatformNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<PlatformResponse> updatePlatform(@PathVariable Long id,
+                                                             @RequestBody PlatformRequest request,
+                                                             Authentication authentication) {
+        PlatformResponse response = platformService.updatePlatform(id, request, authentication.getName());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePlatform(@PathVariable Long id, Authentication authentication) {
-        try {
-            platformService.deletePlatform(id, authentication.getName());
-            return ResponseEntity.noContent().build();
-        } catch (PlatformService.PlatformNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Void> deletePlatform(@PathVariable Long id, Authentication authentication) {
+        platformService.deletePlatform(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
 }

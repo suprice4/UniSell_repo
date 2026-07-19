@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import edu.cit.capendit.unisell.category.dto.CategoryRequest;
 import edu.cit.capendit.unisell.category.dto.CategoryResponse;
 import edu.cit.capendit.unisell.category.service.CategoryService;
-import edu.cit.capendit.unisell.category.service.CategoryService.CategoryNotFoundException;
 
 import java.util.List;
 
@@ -28,36 +27,23 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest request, Authentication authentication) {
-        try {
-            CategoryResponse response = categoryService.createCategory(request, authentication.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest request,
+                                                             Authentication authentication) {
+        CategoryResponse response = categoryService.createCategory(request, authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id,
-                                             @RequestBody CategoryRequest request,
-                                             Authentication authentication) {
-        try {
-            CategoryResponse response = categoryService.updateCategory(id, request, authentication.getName());
-            return ResponseEntity.ok(response);
-        } catch (CategoryService.CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id,
+                                                             @RequestBody CategoryRequest request,
+                                                             Authentication authentication) {
+        CategoryResponse response = categoryService.updateCategory(id, request, authentication.getName());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id, Authentication authentication) {
-        try {
-            categoryService.deleteCategory(id, authentication.getName());
-            return ResponseEntity.noContent().build();
-        } catch (CategoryService.CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id, Authentication authentication) {
+        categoryService.deleteCategory(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
 }

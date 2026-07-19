@@ -6,6 +6,7 @@ import edu.cit.capendit.unisell.category.dto.CategoryRequest;
 import edu.cit.capendit.unisell.category.dto.CategoryResponse;
 import edu.cit.capendit.unisell.category.model.Category;
 import edu.cit.capendit.unisell.category.repository.CategoryRepository;
+import edu.cit.capendit.unisell.core.exception.VendorResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 
@@ -81,9 +82,9 @@ public class CategoryService {
         }
     }
 
-    public static class CategoryNotFoundException extends RuntimeException {
+    public static class CategoryNotFoundException extends VendorResourceNotFoundException {
         public CategoryNotFoundException(Long id) {
-            super("Category not found with id: " + id);
+            super("Category", id);
         }
     }
 }

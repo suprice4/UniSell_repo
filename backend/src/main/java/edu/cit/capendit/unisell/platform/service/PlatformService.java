@@ -2,6 +2,7 @@ package edu.cit.capendit.unisell.platform.service;
 
 import edu.cit.capendit.unisell.auth.model.User;
 import edu.cit.capendit.unisell.auth.repository.UserRepository;
+import edu.cit.capendit.unisell.core.exception.VendorResourceNotFoundException;
 import edu.cit.capendit.unisell.platform.dto.PlatformRequest;
 import edu.cit.capendit.unisell.platform.dto.PlatformResponse;
 import edu.cit.capendit.unisell.platform.model.Platform;
@@ -81,9 +82,9 @@ public class PlatformService {
         }
     }
 
-    public static class PlatformNotFoundException extends RuntimeException {
+    public static class PlatformNotFoundException extends VendorResourceNotFoundException {
         public PlatformNotFoundException(Long id) {
-            super("Platform not found with id: " + id);
+            super("Platform", id);
         }
     }
 }

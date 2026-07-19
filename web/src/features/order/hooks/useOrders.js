@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { ordersApi } from "../api/ordersApi";
-
-const getErrorMessage = (err, fallback) => {
-  const data = err.response?.data;
-  return typeof data === "string" ? data : data?.message || fallback;
-};
+import { getErrorMessage } from "../../../core/api/getErrorMessage";
 
 const NEXT_STATUS = {
   PENDING: "PROCESSING",

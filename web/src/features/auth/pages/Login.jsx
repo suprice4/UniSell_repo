@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../../core/api/axios";
+import { getErrorMessage } from "../../../core/api/getErrorMessage";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -28,9 +29,7 @@ function Login() {
         navigate("/vendor/dashboard");
       }
     } catch (err) {
-      const data = err.response?.data;
-      const message = typeof data === "string" ? data : data?.message || "Login failed. Please try again.";
-      setError(message);
+      setError(getErrorMessage(err, "Login failed. Please try again."));
     } finally {
       setLoading(false);
     }

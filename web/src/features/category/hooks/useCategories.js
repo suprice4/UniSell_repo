@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { categoryApi } from "../api/categoryApi";
-
-const getErrorMessage = (err, fallback) => {
-  const data = err.response?.data;
-  return typeof data === "string" ? data : data?.message || fallback;
-};
+import { getErrorMessage } from "../../../core/api/getErrorMessage";
 
 export function useCategories() {
   const [categories, setCategories] = useState([]);

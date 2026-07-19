@@ -3,6 +3,7 @@ package edu.cit.capendit.unisell.platform.service;
 import edu.cit.capendit.unisell.auth.model.User;
 import edu.cit.capendit.unisell.auth.repository.UserRepository;
 import edu.cit.capendit.unisell.core.exception.VendorResourceNotFoundException;
+import edu.cit.capendit.unisell.core.validation.NameValidator;
 import edu.cit.capendit.unisell.platform.dto.PlatformRequest;
 import edu.cit.capendit.unisell.platform.dto.PlatformResponse;
 import edu.cit.capendit.unisell.platform.model.Platform;
@@ -31,7 +32,7 @@ public class PlatformService {
     }
 
     public PlatformResponse createPlatform(PlatformRequest request, String vendorEmail) {
-        validateName(request.getName());
+        NameValidator.validateName(request.getName(), "Platform");
 
         if (platformRepository.existsByNameIgnoreCaseAndVendorEmail(request.getName().trim(), vendorEmail)) {
             throw new IllegalArgumentException("You already have a platform named '" + request.getName().trim() + "'");
@@ -49,7 +50,7 @@ public class PlatformService {
     }
 
     public PlatformResponse updatePlatform(Long id, PlatformRequest request, String vendorEmail) {
-        validateName(request.getName());
+        NameValidator.validateName(request.getName(), "Platform");
 
         Platform platform = platformRepository.findByIdAndVendorEmail(id, vendorEmail)
                 .orElseThrow(() -> new PlatformNotFoundException(id));
@@ -71,15 +72,6 @@ public class PlatformService {
                 .orElseThrow(() -> new PlatformNotFoundException(id));
 
         platformRepository.delete(platform);
-    }
-
-    private void validateName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Platform name cannot be empty");
-        }
-        if (name.trim().length() > 100) {
-            throw new IllegalArgumentException("Platform name cannot exceed 100 characters");
-        }
     }
 
     public static class PlatformNotFoundException extends VendorResourceNotFoundException {

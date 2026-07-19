@@ -7,6 +7,7 @@ import edu.cit.capendit.unisell.category.dto.CategoryResponse;
 import edu.cit.capendit.unisell.category.model.Category;
 import edu.cit.capendit.unisell.category.repository.CategoryRepository;
 import edu.cit.capendit.unisell.core.exception.VendorResourceNotFoundException;
+import edu.cit.capendit.unisell.core.validation.NameValidator;
 
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class CategoryService {
     }
 
     public CategoryResponse createCategory(CategoryRequest request, String vendorEmail) {
-        validateName(request.getName());
+        NameValidator.validateName(request.getName(), "Category");
 
         if (categoryRepository.existsByNameIgnoreCaseAndVendorEmail(request.getName().trim(), vendorEmail)) {
             throw new IllegalArgumentException("You already have a category named '" + request.getName().trim() + "'");
@@ -49,7 +50,7 @@ public class CategoryService {
     }
 
     public CategoryResponse updateCategory(Long id, CategoryRequest request, String vendorEmail) {
-        validateName(request.getName());
+        NameValidator.validateName(request.getName(), "Category");
 
         Category category = categoryRepository.findByIdAndVendorEmail(id, vendorEmail)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
@@ -71,15 +72,6 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
         categoryRepository.delete(category);
-    }
-
-    private void validateName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be empty");
-        }
-        if (name.trim().length() > 100) {
-            throw new IllegalArgumentException("Category name cannot exceed 100 characters");
-        }
     }
 
     public static class CategoryNotFoundException extends VendorResourceNotFoundException {

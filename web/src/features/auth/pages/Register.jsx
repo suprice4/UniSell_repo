@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../../core/api/axios";
+import { getErrorMessage } from "../../../core/api/getErrorMessage";
 
 function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -21,7 +22,7 @@ function Register() {
       await api.post("/auth/register", form);
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data || "Registration failed. Please try again.");
+      setError(getErrorMessage(err, "Registration failed. Please try again."));
     } finally {
       setLoading(false);
     }

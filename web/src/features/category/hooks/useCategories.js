@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { categoryApi } from "../api/categoryApi";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { useDashboard } from "../../dashboard/context/DashboardContext";
 
 export function useCategories() {
-  const [categories, setCategories] = useState([]);
-  const [loadingList, setLoadingList] = useState(true);
-  const [listError, setListError] = useState("");
+  const { categories, setCategories, loadingCategories, categoriesError } = useDashboard();
 
   const [newName, setNewName] = useState("");
   const [addLoading, setAddLoading] = useState(false);
@@ -17,23 +16,7 @@ export function useCategories() {
   const [editError, setEditError] = useState("");
 
   const [deletingId, setDeletingId] = useState(null);
-
-  const fetchCategories = async () => {
-    setListError("");
-    setLoadingList(true);
-    try {
-      const res = await categoryApi.list();
-      setCategories(res.data);
-    } catch (err) {
-      setListError(getErrorMessage(err, "Failed to load categories."));
-    } finally {
-      setLoadingList(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const [deleteError, setDeleteError] = useState("");
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -80,13 +63,13 @@ export function useCategories() {
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this category?");
     if (!confirmed) return;
-    setListError("");
+    setDeleteError("");
     setDeletingId(id);
     try {
       await categoryApi.remove(id);
       setCategories(categories.filter((c) => c.id !== id));
     } catch (err) {
-      setListError(getErrorMessage(err, "Failed to delete category."));
+      setDeleteError(getErrorMessage(err, "Failed to delete category."));
     } finally {
       setDeletingId(null);
     }
@@ -94,8 +77,8 @@ export function useCategories() {
 
   return {
     categories,
-    loadingList,
-    listError,
+    loadingList: loadingCategories,
+    listError: categoriesError || deleteError,
     newName,
     setNewName,
     addLoading,

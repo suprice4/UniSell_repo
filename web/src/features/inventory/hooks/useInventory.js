@@ -35,9 +35,7 @@ export function useInventory() {
     setAllocPlatformId("");
     setAllocQuantity("");
     setAllocError("");
-    if (!inventoryByProduct[productId]) {
-      fetchInventoryForProduct(productId);
-    }
+    fetchInventoryForProduct(productId);
   };
 
   const handleAllocate = async (e, productId) => {

@@ -48,6 +48,10 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
+        if (!user.isEnabled()) {
+            throw new RuntimeException("This account has been deactivated. Contact support.");
+        }
+
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
 
         return new AuthResponse(user.getId(), user.getName(), user.getEmail(), user.getRole().name(), token);

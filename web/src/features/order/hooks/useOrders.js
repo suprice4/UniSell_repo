@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ordersApi } from "../api/ordersApi";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { useDashboard } from "../../dashboard/context/DashboardContext";
 
 const NEXT_STATUS = {
   PENDING: "PROCESSING",
@@ -11,6 +12,8 @@ const NEXT_STATUS = {
 const emptyItemRow = () => ({ productId: "", quantity: "" });
 
 export function useOrders() {
+  const { notifyOrderCreated } = useDashboard();
+
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [orderListError, setOrderListError] = useState("");
@@ -28,6 +31,8 @@ export function useOrders() {
 
   const [shipmentTrackingByOrderId, setShipmentTrackingByOrderId] = useState({});
   const [shipmentCourierByOrderId, setShipmentCourierByOrderId] = useState({});
+
+  const [confirmDeleteOrderId, setConfirmDeleteOrderId] = useState(null);
 
   const [newOrderPlatformId, setNewOrderPlatformId] = useState("");
   const [newOrderCustomerName, setNewOrderCustomerName] = useState("");
@@ -78,10 +83,25 @@ export function useOrders() {
     const nextStatus = NEXT_STATUS[order.status];
     if (!nextStatus) return;
 
+    let trackingNumber;
+    let courierName;
+
+    if (nextStatus === "SHIPPED") {
+      trackingNumber = (shipmentTrackingByOrderId[order.id] || "").trim();
+      courierName = (shipmentCourierByOrderId[order.id] || "").trim();
+
+      if (!trackingNumber || !courierName) {
+        setOrderActionError(
+          "Courier name and tracking number are required to mark an order as SHIPPED."
+        );
+        return;
+      }
+    }
+
     setOrderActionError("");
     setOrderActionLoadingId(order.id);
     try {
-      const res = await ordersApi.updateStatus(order.id, nextStatus);
+      const res = await ordersApi.updateStatus(order.id, nextStatus, trackingNumber, courierName);
       setOrders(orders.map((o) => (o.id === order.id ? res.data : o)));
     } catch (err) {
       setOrderActionError(getErrorMessage(err, "Failed to update order status."));
@@ -125,6 +145,7 @@ export function useOrders() {
       const res = await ordersApi.processReturn(orderId, selectedReturnItemIds, reason);
       setOrders(orders.map((o) => (o.id === orderId ? res.data : o)));
       setSelectedReturnItemIds([]);
+      notifyOrderCreated();
     } catch (err) {
       setOrderActionError(getErrorMessage(err, "Failed to process return."));
     } finally {
@@ -138,6 +159,7 @@ export function useOrders() {
     try {
       const res = await ordersApi.markUncollected(order.id);
       setOrders(orders.map((o) => (o.id === order.id ? res.data : o)));
+      notifyOrderCreated();
     } catch (err) {
       setOrderActionError(getErrorMessage(err, "Failed to mark shipment uncollected."));
     } finally {
@@ -173,6 +195,43 @@ export function useOrders() {
       setOrders(orders.map((o) => (o.id === orderId ? res.data : o)));
     } catch (err) {
       setOrderActionError(getErrorMessage(err, "Failed to update shipment details."));
+    } finally {
+      setOrderActionLoadingId(null);
+    }
+  };
+
+  const requestDeleteOrder = (orderId) => {
+    setOrderActionError("");
+    setConfirmDeleteOrderId(orderId);
+  };
+
+  const cancelDeleteOrder = () => {
+    setConfirmDeleteOrderId(null);
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    setOrderActionError("");
+
+    const previousOrders = orders;
+
+    // Optimistic update: remove + collapse immediately so this feels real-time,
+    // rather than waiting on the network round-trip (Render free-tier cold
+    // starts can take 20-50s). Rolled back below if the request fails.
+    setOrders((prev) => prev.filter((o) => o.id !== orderId));
+    setConfirmDeleteOrderId(null);
+    if (expandedOrderId === orderId) {
+      setExpandedOrderId(null);
+    }
+
+    setOrderActionLoadingId(orderId);
+    try {
+      await ordersApi.remove(orderId);
+      // Deleting a PENDING order restores platform-allocated stock, so refresh
+      // shared dashboard state the same way create/return/uncollected do.
+      notifyOrderCreated();
+    } catch (err) {
+      setOrders(previousOrders);
+      setOrderActionError(getErrorMessage(err, "Failed to delete order."));
     } finally {
       setOrderActionLoadingId(null);
     }
@@ -232,6 +291,7 @@ export function useOrders() {
         items,
       });
       setOrders((prev) => [res.data, ...prev]);
+      notifyOrderCreated();
       resetCreateOrderForm();
     } catch (err) {
       setCreateOrderError(getErrorMessage(err, "Failed to create order."));
@@ -264,6 +324,10 @@ export function useOrders() {
     setShipmentTracking,
     setShipmentCourier,
     handleUpdateShipmentDetails,
+    confirmDeleteOrderId,
+    requestDeleteOrder,
+    cancelDeleteOrder,
+    handleDeleteOrder,
     newOrderPlatformId,
     setNewOrderPlatformId,
     newOrderCustomerName,

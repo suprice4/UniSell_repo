@@ -176,6 +176,17 @@ public class OrderController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id, Authentication authentication) {
+        String vendorEmail = authentication.getName();
+        try {
+            orderService.deleteOrder(id, vendorEmail);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalStateException e) {
+            return handleError(e);
+        }
+    }
+
     private ResponseEntity<?> handleError(IllegalStateException e) {
         String msg = e.getMessage();
         if ("Order not found".equals(msg)) {

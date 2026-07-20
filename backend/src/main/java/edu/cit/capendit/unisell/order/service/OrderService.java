@@ -165,6 +165,38 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    @Transactional
+    public void deleteOrder(Long orderId, String vendorEmail) {
+        Order order = orderRepository.findByIdAndVendorEmail(orderId, vendorEmail)
+                .orElseThrow(() -> new IllegalStateException("Order not found"));
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException("Only PENDING orders can be deleted");
+        }
+
+        List<OrderItem> items = orderItemRepository.findAllByOrderId(order.getId());
+
+        // Restore platform-allocated stock consumed at order creation (createOrder()
+        // decrements allocation immediately), since this order is being removed
+        // entirely rather than fulfilled. A PENDING order can never have
+        // ReturnRecords, so there's nothing else to unwind here.
+        for (OrderItem item : items) {
+            Inventory inventory = inventoryRepository
+                    .findByProductIdAndPlatformIdAndProductVendorEmail(
+                            item.getProduct().getId(), order.getPlatform().getId(), vendorEmail)
+                    .orElseThrow(() -> new IllegalStateException(
+                            "No inventory allocation found for product '" + item.getProduct().getName()
+                                    + "' on platform '" + order.getPlatform().getName()
+                                    + "' while deleting order"));
+
+            inventory.setAllocatedQuantity(inventory.getAllocatedQuantity() + item.getQuantity());
+            inventoryRepository.save(inventory);
+        }
+
+        orderItemRepository.deleteAll(items);
+        orderRepository.delete(order);
+    }
+
     // orderItemIds: null/empty = every item on the order gets a ReturnRecord (full return).
     // Non-empty = only the specified OrderItem IDs are marked returned (partial return).
     @Transactional

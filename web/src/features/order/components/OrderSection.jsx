@@ -45,6 +45,10 @@ function OrderSection() {
     createOrderLoading,
     createOrderError,
     handleCreateOrderSubmit,
+    confirmDeleteOrderId,
+    requestDeleteOrder,
+    cancelDeleteOrder,
+    handleDeleteOrder,
   } = useOrders();
 
   const { platforms, products } = useDashboard();
@@ -203,7 +207,13 @@ function OrderSection() {
                     {NEXT_STATUS[order.status] && (
                       <button
                         onClick={() => handleAdvanceStatus(order)}
-                        disabled={orderActionLoadingId === order.id}
+                        disabled={
+                          orderActionLoadingId === order.id ||
+                          (NEXT_STATUS[order.status] === "SHIPPED" &&
+                            !(shipmentTrackingByOrderId[order.id] ?? order.trackingNumber ?? "").trim() )
+                          || (NEXT_STATUS[order.status] === "SHIPPED" &&
+                            !(shipmentCourierByOrderId[order.id] ?? order.courierName ?? "").trim())
+                        }
                         style={{ padding: "6px 12px" }}
                       >
                         {orderActionLoadingId === order.id
@@ -212,7 +222,7 @@ function OrderSection() {
                       </button>
                     )}
 
-                    {order.paymentStatus === "PENDING" && (
+                    {order.paymentStatus === "PENDING" && order.status !== "RETURNED" && (
                       <button
                         onClick={() => handleMarkPaymentReceived(order)}
                         disabled={orderActionLoadingId === order.id}
@@ -231,9 +241,39 @@ function OrderSection() {
                         Mark Shipment Uncollected
                       </button>
                     )}
+
+                    {order.status === "PENDING" && (
+                      <button
+                        onClick={() => requestDeleteOrder(order.id)}
+                        disabled={orderActionLoadingId === order.id}
+                        style={{ padding: "6px 12px", color: "#b00020" }}
+                      >
+                        Delete Order
+                      </button>
+                    )}
                   </div>
 
-                  {order.status === "SHIPPED" && (
+                  {confirmDeleteOrderId === order.id && (
+                    <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center" }}>
+                      <span style={{ color: "#b00020" }}>Delete this order permanently?</span>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        disabled={orderActionLoadingId === order.id}
+                        style={{ padding: "6px 12px" }}
+                      >
+                        {orderActionLoadingId === order.id ? "Deleting..." : "Confirm Delete"}
+                      </button>
+                      <button
+                        onClick={cancelDeleteOrder}
+                        disabled={orderActionLoadingId === order.id}
+                        style={{ padding: "6px 12px" }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+
+                  {(order.status === "PROCESSING" || order.status === "SHIPPED") && (
                     <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                       <input
                         type="text"
@@ -249,13 +289,15 @@ function OrderSection() {
                         onChange={(e) => setShipmentTracking(order.id, e.target.value)}
                         style={{ flex: 1, padding: "6px" }}
                       />
-                      <button
-                        onClick={() => handleUpdateShipmentDetails(order.id)}
-                        disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px" }}
-                      >
-                        Save Shipment Details
-                      </button>
+                      {order.status === "SHIPPED" && (
+                        <button
+                          onClick={() => handleUpdateShipmentDetails(order.id)}
+                          disabled={orderActionLoadingId === order.id}
+                          style={{ padding: "6px 12px" }}
+                        >
+                          Save Shipment Details
+                        </button>
+                      )}
                     </div>
                   )}
 

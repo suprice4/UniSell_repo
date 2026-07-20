@@ -20,6 +20,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled = true;
+
     public Long getId() {
         return id;
     }
@@ -58,5 +61,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

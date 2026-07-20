@@ -1,6 +1,8 @@
 package edu.cit.capendit.unisell.product.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import edu.cit.capendit.unisell.product.model.Product;
 
@@ -14,4 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByIdAndVendorEmail(Long id, String vendorEmail);
 
     boolean existsBySkuIgnoreCase(String sku);
+
+    @Query("SELECT COALESCE(SUM(p.quantity), 0) FROM Product p WHERE p.vendor.email = :vendorEmail")
+    Integer sumQuantityByVendorEmail(@Param("vendorEmail") String vendorEmail);
 }

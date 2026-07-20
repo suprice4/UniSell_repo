@@ -9,7 +9,7 @@ function ProtectedRoute({ role, children }) {
   }
 
   if (user.role !== role) {
-    const ownDashboard = user.role === "ADMIN" ? "/admin/dashboard" : "/vendor/dashboard";
+    const ownDashboard = user.role === "ADMIN" ? "/admin" : "/vendor/dashboard";
     return <Navigate to={ownDashboard} replace />;
   }
 

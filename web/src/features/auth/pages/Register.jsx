@@ -4,7 +4,7 @@ import api from "../../../core/api/axios";
 import { getErrorMessage } from "../../../core/api/getErrorMessage";
 
 function Register() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,10 +16,17 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await api.post("/auth/register", form);
+      const { confirmPassword, ...payload } = form;
+      await api.post("/auth/register", payload);
       navigate("/login");
     } catch (err) {
       setError(getErrorMessage(err, "Registration failed. Please try again."));
@@ -64,6 +71,18 @@ function Register() {
               type="password"
               name="password"
               value={form.password}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={form.confirmPassword}
               onChange={handleChange}
               required
               className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"

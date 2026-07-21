@@ -1,7 +1,7 @@
-package edu.cit.capendit.unisell.admin.controller;
+package edu.cit.capendit.unisell.admin.payments.controller;
 
-import edu.cit.capendit.unisell.admin.dto.AdminPaymentResponse;
-import edu.cit.capendit.unisell.admin.service.AdminPaymentService;
+import edu.cit.capendit.unisell.admin.payments.dto.AdminPaymentResponse;
+import edu.cit.capendit.unisell.admin.payments.service.AdminPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import api from "../../../core/api/axios";
-import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { fetchPayments } from "../api/paymentsApi";
+import { getErrorMessage } from "../../../../core/api/getErrorMessage";
 
 export function usePayments() {
   const [payments, setPayments] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   const [listError, setListError] = useState("");
 
-  const fetchPayments = async () => {
+  const loadPayments = async () => {
     setLoadingList(true);
     setListError("");
     try {
-      const res = await api.get("/admin/payments");
+      const res = await fetchPayments();
       setPayments(res.data);
     } catch (err) {
       setListError(getErrorMessage(err, "Failed to load payment records."));
@@ -21,7 +21,7 @@ export function usePayments() {
   };
 
   useEffect(() => {
-    fetchPayments();
+    loadPayments();
   }, []);
 
   return { payments, loadingList, listError };

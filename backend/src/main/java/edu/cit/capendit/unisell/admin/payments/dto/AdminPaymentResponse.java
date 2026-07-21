@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.admin.dto;
+package edu.cit.capendit.unisell.admin.payments.dto;
 
 import edu.cit.capendit.unisell.order.model.Order;
 

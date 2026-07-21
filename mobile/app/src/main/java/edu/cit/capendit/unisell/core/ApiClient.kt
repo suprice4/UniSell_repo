@@ -20,7 +20,7 @@ import edu.cit.capendit.unisell.admin.activitylog.api.ActivityLogApi
 
 object ApiClient {
 
-    private const val BASE_URL = "http://10.0.2.2:8080/api/"
+    private const val BASE_URL = "https://unisell-repo.onrender.com/api/"
     private const val PREFS_NAME = "UniSellPrefs"
     private const val TOKEN_KEY = "auth_token"
 

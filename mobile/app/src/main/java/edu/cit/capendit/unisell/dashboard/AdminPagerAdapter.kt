@@ -6,10 +6,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import edu.cit.capendit.unisell.admin.vendors.ui.VendorsFragment
 import edu.cit.capendit.unisell.admin.returns.ui.ReturnsFragment
 import edu.cit.capendit.unisell.admin.payments.ui.PaymentsFragment
+import edu.cit.capendit.unisell.admin.reports.ui.ReportsFragment
 
 class AdminPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    val tabTitles = listOf("Vendors", "Returns", "Payments")
+    val tabTitles = listOf("Vendors", "Returns", "Payments", "Reports")
 
     override fun getItemCount(): Int = tabTitles.size
 
@@ -18,6 +19,7 @@ class AdminPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activ
             0 -> VendorsFragment()
             1 -> ReturnsFragment()
             2 -> PaymentsFragment()
+            3 -> ReportsFragment()
             else -> throw IllegalArgumentException("Unknown admin tab position: $position")
         }
     }

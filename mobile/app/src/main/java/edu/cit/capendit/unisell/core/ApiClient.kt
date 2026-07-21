@@ -16,6 +16,7 @@ import edu.cit.capendit.unisell.admin.vendors.api.AdminVendorsApi
 import edu.cit.capendit.unisell.admin.returns.api.AdminReturnsApi
 import edu.cit.capendit.unisell.admin.payments.api.AdminPaymentsApi
 import edu.cit.capendit.unisell.admin.reports.api.AdminReportsApi
+import edu.cit.capendit.unisell.admin.activitylog.api.ActivityLogApi
 
 object ApiClient {
 
@@ -88,4 +89,5 @@ object ApiClient {
     val adminReturnsApi: AdminReturnsApi = retrofit.create(AdminReturnsApi::class.java)
     val adminPaymentsApi: AdminPaymentsApi = retrofit.create(AdminPaymentsApi::class.java)
     val adminReportsApi: AdminReportsApi = retrofit.create(AdminReportsApi::class.java)
+    val activityLogApi: ActivityLogApi = retrofit.create(ActivityLogApi::class.java)
 }

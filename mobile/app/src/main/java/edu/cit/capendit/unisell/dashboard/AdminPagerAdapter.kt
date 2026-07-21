@@ -7,10 +7,11 @@ import edu.cit.capendit.unisell.admin.vendors.ui.VendorsFragment
 import edu.cit.capendit.unisell.admin.returns.ui.ReturnsFragment
 import edu.cit.capendit.unisell.admin.payments.ui.PaymentsFragment
 import edu.cit.capendit.unisell.admin.reports.ui.ReportsFragment
+import edu.cit.capendit.unisell.admin.activitylog.ui.ActivityLogFragment
 
 class AdminPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    val tabTitles = listOf("Vendors", "Returns", "Payments", "Reports")
+    val tabTitles = listOf("Vendors", "Returns", "Payments", "Reports", "Activity Log")
 
     override fun getItemCount(): Int = tabTitles.size
 
@@ -20,6 +21,7 @@ class AdminPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activ
             1 -> ReturnsFragment()
             2 -> PaymentsFragment()
             3 -> ReportsFragment()
+            4 -> ActivityLogFragment()
             else -> throw IllegalArgumentException("Unknown admin tab position: $position")
         }
     }

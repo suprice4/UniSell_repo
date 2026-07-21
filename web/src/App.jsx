@@ -9,7 +9,6 @@ import AdminPaymentsPage from './features/admin/payments/pages/AdminPaymentsPage
 import AdminReportsPage from './features/admin/reports/pages/AdminReportsPage'
 import ProtectedRoute from './core/routing/ProtectedRoute'
 import ActivityLogPage from './features/admin/activityLog/pages/ActivityLogPage'
-import './App.css'
 
 function App() {
   return (

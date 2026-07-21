@@ -36,6 +36,12 @@ function AdminLayout() {
           <NavLink to="/admin/reports" style={linkStyle}>
             Reports
           </NavLink>
+          <NavLink to="/admin/reports" style={linkStyle}>
+            Reports
+          </NavLink>
+          <NavLink to="/admin/activity-log" style={linkStyle}>
+            Activity Log
+          </NavLink>
         </nav>
         <div style={{ flex: 1, padding: "40px", fontFamily: "sans-serif" }}>
           <Outlet />

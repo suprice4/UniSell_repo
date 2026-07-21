@@ -8,6 +8,7 @@ import AdminReturnsPage from './features/dashboard/pages/AdminReturnsPage'
 import AdminPaymentsPage from './features/dashboard/pages/AdminPaymentsPage'
 import AdminReportsPage from './features/dashboard/pages/AdminReportsPage'
 import ProtectedRoute from './core/routing/ProtectedRoute'
+import ActivityLogPage from './features/admin/activityLog/pages/ActivityLogPage'
 import './App.css'
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="returns" element={<AdminReturnsPage />} />
         <Route path="payments" element={<AdminPaymentsPage />} />
         <Route path="reports" element={<AdminReportsPage />} />
+        <Route path="activity-log" element={<ActivityLogPage />} />
       </Route>
 
       {/* Old single-page URL — redirect so nothing bookmarked breaks */}

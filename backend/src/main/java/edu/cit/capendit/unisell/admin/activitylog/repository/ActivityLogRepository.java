@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> {
-    // Added now so Part 2's controller doesn't need to touch the repository layer
     List<ActivityLog> findAllByOrderByTimestampDesc();
+
+    // Part 2: recent-N limit for the read endpoint (capstone scale, not paginated)
+    List<ActivityLog> findTop100ByOrderByTimestampDesc();
 }

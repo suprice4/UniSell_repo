@@ -1,9 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.UniSell" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/indigo_600</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/indigo_100</item>
+        <item name="colorOnPrimaryContainer">@color/indigo_700</item>
+        <item name="colorSecondary">@color/indigo_700</item>
+        <item name="colorError">@color/red_600</item>
+        <item name="android:colorBackground">@color/slate_50</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/slate_900</item>
+        <item name="colorOnSurfaceVariant">@color/slate_600</item>
+        <item name="colorOutline">@color/slate_300</item>
+        <item name="shapeAppearanceCornerExtraSmall">@style/ShapeAppearance.UniSell.Small</item>
+        <item name="shapeAppearanceCornerSmall">@style/ShapeAppearance.UniSell.Small</item>
+        <item name="shapeAppearanceCornerMedium">@style/ShapeAppearance.UniSell.Medium</item>
     </style>
 
     <style name="Theme.UniSell" parent="Base.Theme.UniSell" />
+
+    <style name="ShapeAppearance.UniSell.Small" parent="ShapeAppearance.Material3.Corner.Small">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.UniSell.Medium" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">12dp</item>
+    </style>
 </resources>

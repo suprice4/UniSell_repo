@@ -2,4 +2,26 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Brand accent, matches the web app's Tailwind indigo palette -->
+    <color name="indigo_50">#EEF2FF</color>
+    <color name="indigo_100">#E0E7FF</color>
+    <color name="indigo_600">#4F46E5</color>
+    <color name="indigo_700">#4338CA</color>
+
+    <!-- Neutrals, matches the web app's Tailwind slate palette -->
+    <color name="slate_50">#F8FAFC</color>
+    <color name="slate_100">#F1F5F9</color>
+    <color name="slate_200">#E2E8F0</color>
+    <color name="slate_300">#CBD5E1</color>
+    <color name="slate_500">#64748B</color>
+    <color name="slate_600">#475569</color>
+    <color name="slate_700">#334155</color>
+    <color name="slate_900">#0F172A</color>
+
+    <color name="red_50">#FEF2F2</color>
+    <color name="red_200">#FECACA</color>
+    <color name="red_600">#DC2626</color>
+
+    <color name="green_600">#16A34A</color>
 </resources>

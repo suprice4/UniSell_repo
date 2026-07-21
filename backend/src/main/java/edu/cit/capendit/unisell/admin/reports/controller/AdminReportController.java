@@ -1,7 +1,7 @@
-package edu.cit.capendit.unisell.admin.controller;
+package edu.cit.capendit.unisell.admin.reports.controller;
 
-import edu.cit.capendit.unisell.admin.dto.AdminVendorReportResponse;
-import edu.cit.capendit.unisell.admin.service.AdminReportService;
+import edu.cit.capendit.unisell.admin.reports.dto.AdminVendorReportResponse;
+import edu.cit.capendit.unisell.admin.reports.service.AdminReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

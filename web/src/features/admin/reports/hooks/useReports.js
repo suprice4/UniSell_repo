@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import api from "../../../core/api/axios";
-import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { fetchReports } from "../api/reportsApi";
+import { getErrorMessage } from "../../../../core/api/getErrorMessage";
 
 export function useReports() {
   const [reports, setReports] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   const [listError, setListError] = useState("");
 
-  const fetchReports = async () => {
+  const loadReports = async () => {
     setLoadingList(true);
     setListError("");
     try {
-      const res = await api.get("/admin/reports");
+      const res = await fetchReports();
       setReports(res.data);
     } catch (err) {
       setListError(getErrorMessage(err, "Failed to load vendor reports."));
@@ -21,7 +21,7 @@ export function useReports() {
   };
 
   useEffect(() => {
-    fetchReports();
+    loadReports();
   }, []);
 
   return { reports, loadingList, listError };

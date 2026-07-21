@@ -1,6 +1,6 @@
-package edu.cit.capendit.unisell.admin.service;
+package edu.cit.capendit.unisell.admin.reports.service;
 
-import edu.cit.capendit.unisell.admin.dto.AdminVendorReportResponse;
+import edu.cit.capendit.unisell.admin.reports.dto.AdminVendorReportResponse;
 import edu.cit.capendit.unisell.auth.model.Role;
 import edu.cit.capendit.unisell.auth.model.User;
 import edu.cit.capendit.unisell.auth.repository.UserRepository;

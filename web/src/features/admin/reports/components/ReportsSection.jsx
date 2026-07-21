@@ -4,42 +4,44 @@ function ReportsSection() {
   const { reports, loadingList, listError } = useReports();
 
   return (
-    <div>
-      <h3>Vendor Reports</h3>
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-slate-900">Vendor Reports</h3>
 
-      {listError && <p style={{ color: "red" }}>{listError}</p>}
+      {listError && <p className="mt-2 text-sm text-red-600">{listError}</p>}
 
       {loadingList ? (
-        <p>Loading reports...</p>
+        <p className="mt-3 text-sm text-slate-500">Loading reports...</p>
       ) : reports.length === 0 ? (
-        <p>No vendors yet.</p>
+        <p className="mt-3 text-sm text-slate-500">No vendors yet.</p>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ borderBottom: "2px solid #ccc", textAlign: "left" }}>
-              <th style={{ padding: "8px" }}>Vendor</th>
-              <th style={{ padding: "8px" }}>Email</th>
-              <th style={{ padding: "8px" }}>Total Orders</th>
-              <th style={{ padding: "8px" }}>Inventory</th>
-              <th style={{ padding: "8px" }}>Pending</th>
-              <th style={{ padding: "8px" }}>Received</th>
-              <th style={{ padding: "8px" }}>Refunded</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map((r) => (
-              <tr key={r.vendorId} style={{ borderBottom: "1px solid #eee" }}>
-                <td style={{ padding: "8px" }}>{r.vendorName}</td>
-                <td style={{ padding: "8px" }}>{r.vendorEmail}</td>
-                <td style={{ padding: "8px" }}>{r.totalOrders}</td>
-                <td style={{ padding: "8px" }}>{r.totalInventory}</td>
-                <td style={{ padding: "8px" }}>{r.paymentStatusBreakdown.PENDING ?? 0}</td>
-                <td style={{ padding: "8px" }}>{r.paymentStatusBreakdown.RECEIVED ?? 0}</td>
-                <td style={{ padding: "8px" }}>{r.paymentStatusBreakdown.REFUNDED ?? 0}</td>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 text-slate-500">
+                <th className="px-3 py-2 font-medium">Vendor</th>
+                <th className="px-3 py-2 font-medium">Email</th>
+                <th className="px-3 py-2 font-medium">Total Orders</th>
+                <th className="px-3 py-2 font-medium">Inventory</th>
+                <th className="px-3 py-2 font-medium">Pending</th>
+                <th className="px-3 py-2 font-medium">Received</th>
+                <th className="px-3 py-2 font-medium">Refunded</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {reports.map((r) => (
+                <tr key={r.vendorId} className="text-slate-700">
+                  <td className="px-3 py-2">{r.vendorName}</td>
+                  <td className="px-3 py-2">{r.vendorEmail}</td>
+                  <td className="px-3 py-2">{r.totalOrders}</td>
+                  <td className="px-3 py-2">{r.totalInventory}</td>
+                  <td className="px-3 py-2">{r.paymentStatusBreakdown.PENDING ?? 0}</td>
+                  <td className="px-3 py-2">{r.paymentStatusBreakdown.RECEIVED ?? 0}</td>
+                  <td className="px-3 py-2">{r.paymentStatusBreakdown.REFUNDED ?? 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

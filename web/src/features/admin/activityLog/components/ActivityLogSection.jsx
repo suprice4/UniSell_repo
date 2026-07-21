@@ -4,33 +4,24 @@ function ActivityLogSection() {
   const { entries, loadingList, listError } = useActivityLog();
 
   return (
-    <div>
-      <h3>Activity Log</h3>
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-slate-900">Activity Log</h3>
 
-      {listError && <p style={{ color: "red" }}>{listError}</p>}
+      {listError && <p className="mt-2 text-sm text-red-600">{listError}</p>}
 
       {loadingList ? (
-        <p>Loading activity log...</p>
+        <p className="mt-3 text-sm text-slate-500">Loading activity log...</p>
       ) : entries.length === 0 ? (
-        <p>No activity recorded yet.</p>
+        <p className="mt-3 text-sm text-slate-500">No activity recorded yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="mt-3 divide-y divide-slate-100">
           {entries.map((e) => (
-            <li
-              key={e.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 0",
-                borderBottom: "1px solid #eee",
-              }}
-            >
-              <span style={{ flex: 1 }}>{e.actorEmail}</span>
-              <span style={{ flex: 1 }}>{e.actorRole}</span>
-              <span style={{ flex: 1 }}>{e.actionType}</span>
-              <span style={{ flex: 2 }}>{e.description}</span>
-              <span style={{ flex: 1 }}>
+            <li key={e.id} className="flex items-center gap-2 py-2.5">
+              <span className="flex-1 text-sm text-slate-800">{e.actorEmail}</span>
+              <span className="flex-1 text-sm text-slate-600">{e.actorRole}</span>
+              <span className="flex-1 text-sm text-slate-600">{e.actionType}</span>
+              <span className="flex-[2] text-sm text-slate-700">{e.description}</span>
+              <span className="flex-1 text-sm text-slate-500">
                 {new Date(e.timestamp).toLocaleString()}
               </span>
             </li>

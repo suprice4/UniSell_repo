@@ -1,49 +1,34 @@
 import { NavLink, Outlet } from "react-router-dom";
 import Header from "../../../core/components/Header";
 
-const linkStyle = ({ isActive }) => ({
-  display: "block",
-  padding: "10px 16px",
-  borderRadius: "6px",
-  textDecoration: "none",
-  color: isActive ? "#fff" : "#333",
-  backgroundColor: isActive ? "#2c3e50" : "transparent",
-  marginBottom: "4px",
-  fontWeight: isActive ? 600 : 400,
-});
+const navLinkClass = ({ isActive }) =>
+  `block rounded-md px-4 py-2.5 text-sm font-medium transition ${
+    isActive ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-100"
+  }`;
 
 function AdminLayout() {
   return (
     <>
       <Header title="Admin Dashboard" />
-      <div style={{ display: "flex", minHeight: "calc(100vh - 60px)" }}>
-        <nav
-          style={{
-            width: "200px",
-            padding: "24px 12px",
-            borderRight: "1px solid #eee",
-          }}
-        >
-          <NavLink to="/admin/vendors" style={linkStyle}>
+      <div className="flex min-h-[calc(100vh-57px)]">
+        <nav className="w-52 space-y-1 border-r border-slate-200 bg-white p-4">
+          <NavLink to="/admin/vendors" className={navLinkClass}>
             Vendors
           </NavLink>
-          <NavLink to="/admin/returns" style={linkStyle}>
+          <NavLink to="/admin/returns" className={navLinkClass}>
             Returns
           </NavLink>
-          <NavLink to="/admin/payments" style={linkStyle}>
+          <NavLink to="/admin/payments" className={navLinkClass}>
             Payments
           </NavLink>
-          <NavLink to="/admin/reports" style={linkStyle}>
+          <NavLink to="/admin/reports" className={navLinkClass}>
             Reports
           </NavLink>
-          <NavLink to="/admin/reports" style={linkStyle}>
-            Reports
-          </NavLink>
-          <NavLink to="/admin/activity-log" style={linkStyle}>
+          <NavLink to="/admin/activity-log" className={navLinkClass}>
             Activity Log
           </NavLink>
         </nav>
-        <div style={{ flex: 1, padding: "40px", fontFamily: "sans-serif" }}>
+        <div className="flex-1 p-10">
           <Outlet />
         </div>
       </div>

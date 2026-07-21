@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -22,33 +23,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/slate_900" />
 
             <TextView
                 android:id="@+id/tvProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
-                android:textColor="#666666" />
+                android:textColor="@color/slate_500" />
 
         </LinearLayout>
 
         <Button
             android:id="@+id/btnEditProduct"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Edit" />
 
         <Button
             android:id="@+id/btnDeleteProduct"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/red_600"
+            app:strokeColor="@color/red_200"
             android:text="Delete" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/btnTogglePlatforms"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Platforms"
@@ -62,7 +69,9 @@
         android:visibility="gone"
         android:paddingTop="8dp"
         android:paddingStart="8dp"
-        android:background="#F5F5F5">
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:background="@color/slate_100">
 
         <LinearLayout
             android:id="@+id/llAllocationRows"

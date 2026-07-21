@@ -53,7 +53,7 @@
             android:id="@+id/tvProductDialogError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#D32F2F"
+            android:textColor="@color/red_600"
             android:visibility="gone"
             android:layout_marginTop="8dp" />
 

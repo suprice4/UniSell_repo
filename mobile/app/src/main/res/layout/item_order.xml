@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -16,13 +17,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textColor="@color/slate_900" />
 
         <TextView
             android:id="@+id/tvOrderStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/indigo_600" />
 
     </LinearLayout>
 
@@ -31,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="#666666" />
+        android:textColor="@color/slate_500" />
 
     <LinearLayout
         android:id="@+id/llOrderPanel"
@@ -41,7 +44,9 @@
         android:visibility="gone"
         android:paddingTop="8dp"
         android:paddingStart="8dp"
-        android:background="#F5F5F5">
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:background="@color/slate_100">
 
         <TextView
             android:id="@+id/tvItemsLoading"
@@ -60,7 +65,7 @@
             android:id="@+id/tvOrderActionError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#D32F2F"
+            android:textColor="@color/red_600"
             android:visibility="gone"
             android:layout_marginTop="4dp" />
 
@@ -78,12 +83,14 @@
 
             <Button
                 android:id="@+id/btnMarkPaymentReceived"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Payment Received" />
 
             <Button
                 android:id="@+id/btnMarkUncollected"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mark Uncollected" />
@@ -106,6 +113,7 @@
 
             <Button
                 android:id="@+id/btnProcessReturn"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Process Return" />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import api from "../../../core/api/axios";
-import { getErrorMessage } from "../../../core/api/getErrorMessage";
+import { fetchVendors, updateVendorStatus } from "../api/vendorsApi";
+import { getErrorMessage } from "../../../../core/api/getErrorMessage";
 
 export function useVendors() {
   const [vendors, setVendors] = useState([]);
@@ -9,11 +9,11 @@ export function useVendors() {
   const [togglingId, setTogglingId] = useState(null);
   const [toggleError, setToggleError] = useState("");
 
-  const fetchVendors = async () => {
+  const loadVendors = async () => {
     setLoadingList(true);
     setListError("");
     try {
-      const res = await api.get("/admin/vendors");
+      const res = await fetchVendors();
       setVendors(res.data);
     } catch (err) {
       setListError(getErrorMessage(err, "Failed to load vendors."));
@@ -23,16 +23,14 @@ export function useVendors() {
   };
 
   useEffect(() => {
-    fetchVendors();
+    loadVendors();
   }, []);
 
   const handleToggle = async (vendor) => {
     setTogglingId(vendor.id);
     setToggleError("");
     try {
-      const res = await api.put(`/admin/vendors/${vendor.id}/status`, {
-        enabled: !vendor.enabled,
-      });
+      const res = await updateVendorStatus(vendor.id, !vendor.enabled);
       setVendors((prev) =>
         prev.map((v) => (v.id === vendor.id ? res.data : v))
       );

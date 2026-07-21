@@ -1,8 +1,8 @@
-package edu.cit.capendit.unisell.admin.service;
+package edu.cit.capendit.unisell.admin.vendors.service;
 
 import edu.cit.capendit.unisell.admin.activitylog.model.ActivityActionType;
 import edu.cit.capendit.unisell.admin.activitylog.service.ActivityLogService;
-import edu.cit.capendit.unisell.admin.dto.VendorResponse;
+import edu.cit.capendit.unisell.admin.vendors.dto.VendorResponse;
 import edu.cit.capendit.unisell.auth.model.Role;
 import edu.cit.capendit.unisell.auth.model.User;
 import edu.cit.capendit.unisell.auth.repository.UserRepository;

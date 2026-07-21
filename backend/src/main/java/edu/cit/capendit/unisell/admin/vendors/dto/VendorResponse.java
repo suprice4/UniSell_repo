@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.admin.dto;
+package edu.cit.capendit.unisell.admin.vendors.dto;
 
 import edu.cit.capendit.unisell.auth.model.User;
 

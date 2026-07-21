@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.admin.dto;
+package edu.cit.capendit.unisell.admin.vendors.dto;
 
 public class VendorStatusUpdateRequest {
     private boolean enabled;

@@ -1,8 +1,8 @@
-package edu.cit.capendit.unisell.admin.controller;
+package edu.cit.capendit.unisell.admin.vendors.controller;
 
-import edu.cit.capendit.unisell.admin.dto.VendorResponse;
-import edu.cit.capendit.unisell.admin.dto.VendorStatusUpdateRequest;
-import edu.cit.capendit.unisell.admin.service.AdminVendorService;
+import edu.cit.capendit.unisell.admin.vendors.dto.VendorResponse;
+import edu.cit.capendit.unisell.admin.vendors.dto.VendorStatusUpdateRequest;
+import edu.cit.capendit.unisell.admin.vendors.service.AdminVendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

@@ -1,5 +1,7 @@
 package edu.cit.capendit.unisell.admin.service;
 
+import edu.cit.capendit.unisell.admin.activitylog.model.ActivityActionType;
+import edu.cit.capendit.unisell.admin.activitylog.service.ActivityLogService;
 import edu.cit.capendit.unisell.admin.dto.VendorResponse;
 import edu.cit.capendit.unisell.auth.model.Role;
 import edu.cit.capendit.unisell.auth.model.User;
@@ -16,6 +18,9 @@ public class AdminVendorService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ActivityLogService activityLogService;
+
     public List<VendorResponse> listVendors() {
         return userRepository.findAllByRole(Role.VENDOR)
                 .stream()
@@ -23,7 +28,7 @@ public class AdminVendorService {
                 .collect(Collectors.toList());
     }
 
-    public VendorResponse setEnabled(Long vendorId, boolean enabled) {
+    public VendorResponse setEnabled(Long vendorId, boolean enabled, String adminEmail) {
         User user = userRepository.findById(vendorId)
                 .orElseThrow(() -> new IllegalStateException("Vendor not found"));
 
@@ -33,6 +38,12 @@ public class AdminVendorService {
 
         user.setEnabled(enabled);
         userRepository.save(user);
+
+        activityLogService.log(adminEmail, "ADMIN",
+                enabled ? ActivityActionType.VENDOR_ACCOUNT_ENABLED : ActivityActionType.VENDOR_ACCOUNT_DISABLED,
+                "Vendor account " + (enabled ? "activated" : "deactivated") + ": " + user.getEmail(),
+                "USER", user.getId());
+
         return VendorResponse.fromEntity(user);
     }
 }

@@ -5,6 +5,7 @@ import edu.cit.capendit.unisell.admin.dto.VendorStatusUpdateRequest;
 import edu.cit.capendit.unisell.admin.service.AdminVendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +24,11 @@ public class AdminVendorController {
 
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateStatus(@PathVariable Long id,
-                                           @RequestBody VendorStatusUpdateRequest request) {
+                                           @RequestBody VendorStatusUpdateRequest request,
+                                           Authentication authentication) {
         try {
-            return ResponseEntity.ok(adminVendorService.setEnabled(id, request.isEnabled()));
+            String adminEmail = authentication.getName();
+            return ResponseEntity.ok(adminVendorService.setEnabled(id, request.isEnabled(), adminEmail));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

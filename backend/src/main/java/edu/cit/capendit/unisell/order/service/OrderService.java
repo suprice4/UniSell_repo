@@ -1,5 +1,7 @@
 package edu.cit.capendit.unisell.order.service;
 
+import edu.cit.capendit.unisell.admin.activitylog.model.ActivityActionType;
+import edu.cit.capendit.unisell.admin.activitylog.service.ActivityLogService;
 import edu.cit.capendit.unisell.inventory.model.Inventory;
 import edu.cit.capendit.unisell.inventory.repository.InventoryRepository;
 import edu.cit.capendit.unisell.order.model.*;
@@ -28,6 +30,9 @@ public class OrderService {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     // requestedItems: product -> quantity
     @Transactional
@@ -99,8 +104,7 @@ public class OrderService {
         Order order = orderRepository.findByIdAndVendorEmail(orderId, vendorEmail)
                 .orElseThrow(() -> new IllegalStateException("Order not found"));
 
-        validateStatusTransition(order.getStatus(), newStatus);
-        order.setStatus(newStatus);
+        order = transitionStatus(order, newStatus, vendorEmail);
 
         // Full-order RETURNED via generic status update covers all items.
         // For partial returns, use processReturn() instead.
@@ -127,9 +131,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalStateException("Order not found"));
 
         // A return (partial or full) moves the order into RETURNED status.
-        validateStatusTransition(order.getStatus(), OrderStatus.RETURNED);
-        order.setStatus(OrderStatus.RETURNED);
-        orderRepository.save(order);
+        order = transitionStatus(order, OrderStatus.RETURNED, vendorEmail);
 
         generateReturnRecords(order, orderItemIds, reason, vendorEmail);
         return order;
@@ -143,9 +145,7 @@ public class OrderService {
         order.setShipmentStatus(ShipmentStatus.UNCOLLECTED);
 
         // Per SRS: uncollected shipment triggers a return, so status must also move to RETURNED
-        validateStatusTransition(order.getStatus(), OrderStatus.RETURNED);
-        order.setStatus(OrderStatus.RETURNED);
-        orderRepository.save(order);
+        order = transitionStatus(order, OrderStatus.RETURNED, vendorEmail);
 
         generateReturnRecords(order, null, "Shipment uncollected", vendorEmail);
         return order;
@@ -197,11 +197,27 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
+    // Validates the transition, mutates status, logs ORDER_STATUS_CHANGE, and persists.
+    // Does NOT call generateReturnRecords() — callers remain responsible for that,
+    // exactly as before this refactor.
+    private Order transitionStatus(Order order, OrderStatus newStatus, String vendorEmail) {
+        OrderStatus previousStatus = order.getStatus();
+        validateStatusTransition(previousStatus, newStatus);
+        order.setStatus(newStatus);
+
+        activityLogService.log(vendorEmail, "VENDOR", ActivityActionType.ORDER_STATUS_CHANGE,
+                "Order status changed from " + previousStatus + " to " + newStatus,
+                "ORDER", order.getId());
+
+        return orderRepository.save(order);
+    }
+
     // orderItemIds: null/empty = every item on the order gets a ReturnRecord (full return).
     // Non-empty = only the specified OrderItem IDs are marked returned (partial return).
     @Transactional
     public void generateReturnRecords(Order order, List<Long> orderItemIds, String reason, String vendorEmail) {
         List<OrderItem> items = orderItemRepository.findAllByOrderId(order.getId());
+        int recordCount = 0;
 
         for (OrderItem item : items) {
             if (orderItemIds == null || orderItemIds.isEmpty() || orderItemIds.contains(item.getId())) {
@@ -223,7 +239,15 @@ public class OrderService {
 
                 inventory.setAllocatedQuantity(inventory.getAllocatedQuantity() + item.getQuantity());
                 inventoryRepository.save(inventory);
+                recordCount++;
             }
+        }
+
+        if (recordCount > 0) {
+            activityLogService.log(vendorEmail, "VENDOR", ActivityActionType.RETURN_GENERATED,
+                    "Generated " + recordCount + " return record(s)"
+                            + (reason != null ? " — reason: " + reason : ""),
+                    "ORDER", order.getId());
         }
 
         // FR-024: payment status is order-level/binary (not a per-item dollar calc, per SRS wording).

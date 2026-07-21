@@ -1,7 +1,7 @@
 package edu.cit.capendit.unisell.admin.activitylog.controller;
 
 import edu.cit.capendit.unisell.admin.activitylog.dto.ActivityLogResponse;
-import edu.cit.capendit.unisell.admin.activitylog.repository.ActivityLogRepository;
+import edu.cit.capendit.unisell.admin.activitylog.service.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 public class ActivityLogController {
 
     @Autowired
-    private ActivityLogRepository activityLogRepository;
+    private ActivityLogService activityLogService;
 
     @GetMapping
     public ResponseEntity<List<ActivityLogResponse>> listRecentActivity() {
-        List<ActivityLogResponse> response = activityLogRepository.findTop100ByOrderByTimestampDesc()
+        List<ActivityLogResponse> response = activityLogService.getRecentActivity()
                 .stream()
                 .map(ActivityLogResponse::fromEntity)
                 .collect(Collectors.toList());

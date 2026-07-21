@@ -1,4 +1,4 @@
-package edu.cit.capendit.unisell.admin.dto;
+package edu.cit.capendit.unisell.admin.returns.dto;
 
 import edu.cit.capendit.unisell.order.model.ReturnRecord;
 

@@ -1,6 +1,6 @@
-package edu.cit.capendit.unisell.admin.service;
+package edu.cit.capendit.unisell.admin.returns.service;
 
-import edu.cit.capendit.unisell.admin.dto.AdminReturnResponse;
+import edu.cit.capendit.unisell.admin.returns.dto.AdminReturnResponse;
 import edu.cit.capendit.unisell.order.repository.ReturnRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

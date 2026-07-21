@@ -12,6 +12,7 @@ import edu.cit.capendit.unisell.product.api.ProductApi
 import edu.cit.capendit.unisell.platform.api.PlatformApi
 import edu.cit.capendit.unisell.inventory.api.InventoryApi
 import edu.cit.capendit.unisell.order.api.OrderApi
+import edu.cit.capendit.unisell.admin.vendors.api.AdminVendorsApi
 
 object ApiClient {
 
@@ -80,4 +81,5 @@ object ApiClient {
     val platformApi: PlatformApi = retrofit.create(PlatformApi::class.java)
     val inventoryApi: InventoryApi = retrofit.create(InventoryApi::class.java)
     val orderApi: OrderApi = retrofit.create(OrderApi::class.java)
+    val adminVendorsApi: AdminVendorsApi = retrofit.create(AdminVendorsApi::class.java)
 }

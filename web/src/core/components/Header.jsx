@@ -11,20 +11,14 @@ function Header({ title }) {
   };
 
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "12px 24px",
-        borderBottom: "1px solid #ddd",
-        fontFamily: "sans-serif",
-      }}
-    >
-      <div style={{ fontWeight: "bold" }}>{title}</div>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        {user?.email && <span style={{ fontSize: "14px" }}>{user.email}</span>}
-        <button onClick={handleLogout} style={{ padding: "6px 12px" }}>
+    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3">
+      <div className="font-semibold text-slate-900">{title}</div>
+      <div className="flex items-center gap-3">
+        {user?.email && <span className="text-sm text-slate-600">{user.email}</span>}
+        <button
+          onClick={handleLogout}
+          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        >
           Log out
         </button>
       </div>

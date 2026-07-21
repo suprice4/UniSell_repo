@@ -24,46 +24,29 @@ function InventoryPanel({
   onUpdateAllocation,
 }) {
   return (
-    <div
-      style={{
-        marginTop: "8px",
-        marginLeft: "16px",
-        padding: "8px",
-        background: "#fafafa",
-        border: "1px solid #eee",
-      }}
-    >
-      <strong style={{ fontSize: "0.9em" }}>Platform allocations</strong>
+    <div className="mt-2 ml-4 rounded-md border border-slate-200 bg-slate-50 p-3">
+      <strong className="text-sm text-slate-700">Platform allocations</strong>
 
       {loading ? (
-        <p style={{ fontSize: "0.9em" }}>Loading...</p>
+        <p className="mt-1 text-sm text-slate-500">Loading...</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0, marginTop: "6px" }}>
+        <ul className="mt-1.5 space-y-1">
           {(allocations || []).length === 0 && (
-            <li style={{ fontSize: "0.9em", color: "#888" }}>No allocations yet.</li>
+            <li className="text-sm text-slate-400">No allocations yet.</li>
           )}
           {(allocations || []).map((alloc) => {
             const isEditing = editPlatformId === alloc.platformId;
             return (
-              <li
-                key={alloc.id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "4px",
-                  fontSize: "0.9em",
-                  padding: "4px 0",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <li key={alloc.id} className="flex flex-col gap-1 py-1 text-sm">
+                <div className="flex items-center gap-2">
                   {isEditing ? (
                     <>
-                      <span style={{ flex: 1 }}>{alloc.platformName}:</span>
+                      <span className="flex-1 text-slate-700">{alloc.platformName}:</span>
                       <input
                         type="number"
                         value={editQuantity}
                         onChange={(e) => setEditQuantity(e.target.value)}
-                        style={{ padding: "4px", width: "70px" }}
+                        className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm"
                         autoFocus
                       />
                       <button
@@ -71,71 +54,56 @@ function InventoryPanel({
                           onUpdateAllocation(productId, alloc.platformId, editQuantity)
                         }
                         disabled={editLoading}
-                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                        className="rounded-md bg-indigo-600 px-2 py-1 text-xs font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
                       >
                         {editLoading ? "..." : "Save"}
                       </button>
                       <button
                         onClick={onCancelEdit}
                         disabled={editLoading}
-                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 transition hover:bg-white disabled:opacity-60"
                       >
                         Cancel
                       </button>
                     </>
                   ) : (
                     <>
-                      <span style={{ flex: 1 }}>
+                      <span className="flex-1 text-slate-700">
                         {alloc.platformName}: {alloc.allocatedQuantity}
                         {isLowStockAllocation(alloc, product) && (
-                          <span
-                            style={{
-                              marginLeft: "8px",
-                              padding: "2px 8px",
-                              borderRadius: "4px",
-                              fontSize: "12px",
-                              fontWeight: "bold",
-                              color: "#fff",
-                              backgroundColor: "#c0392b",
-                            }}
-                          >
+                          <span className="ml-2 rounded-md bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                             LOW STOCK
                           </span>
                         )}
                       </span>
                       <button
                         onClick={() => onStartEdit(alloc.platformId, alloc.allocatedQuantity)}
-                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 transition hover:bg-white"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => onDeleteAllocation(productId, alloc.platformId)}
-                        style={{ padding: "4px 8px", fontSize: "0.85em" }}
+                        className="rounded-md border border-red-200 px-2 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50"
                       >
                         Remove
                       </button>
                     </>
                   )}
                 </div>
-                {isEditing && editError && (
-                  <p style={{ color: "red", fontSize: "0.85em", margin: 0 }}>{editError}</p>
-                )}
+                {isEditing && editError && <p className="text-xs text-red-600">{editError}</p>}
               </li>
             );
           })}
         </ul>
       )}
 
-      <form
-        onSubmit={(e) => onAllocate(e, productId)}
-        style={{ display: "flex", gap: "6px", marginTop: "8px" }}
-      >
+      <form onSubmit={(e) => onAllocate(e, productId)} className="mt-2 flex gap-1.5">
         <select
           value={allocPlatformId}
           onChange={(e) => setAllocPlatformId(e.target.value)}
           required
-          style={{ padding: "6px", flex: 1 }}
+          className="flex-1 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
         >
           <option value="" disabled>
             Select platform
@@ -152,15 +120,17 @@ function InventoryPanel({
           onChange={(e) => setAllocQuantity(e.target.value)}
           placeholder="Qty"
           required
-          style={{ padding: "6px", width: "80px" }}
+          className="w-20 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
         />
-        <button type="submit" disabled={allocLoading} style={{ padding: "6px 12px" }}>
+        <button
+          type="submit"
+          disabled={allocLoading}
+          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+        >
           {allocLoading ? "..." : "Allocate"}
         </button>
       </form>
-      {allocError && (
-        <p style={{ color: "red", fontSize: "0.9em", marginTop: "4px" }}>{allocError}</p>
-      )}
+      {allocError && <p className="mt-1 text-sm text-red-600">{allocError}</p>}
     </div>
   );
 }

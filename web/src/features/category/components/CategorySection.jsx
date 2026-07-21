@@ -24,10 +24,10 @@ function CategorySection() {
 
   return (
     <div>
-      <h3>Categories</h3>
+      <h3 className="text-lg font-semibold text-slate-900">Categories</h3>
 
-      <form onSubmit={handleAdd} style={{ marginBottom: "16px" }}>
-        <div style={{ display: "flex", gap: "8px" }}>
+      <form onSubmit={handleAdd} className="mt-3">
+        <div className="flex gap-2">
           <input
             type="text"
             name="newCategory"
@@ -35,64 +35,66 @@ function CategorySection() {
             onChange={(e) => setNewName(e.target.value)}
             placeholder="New category name"
             required
-            style={{ flex: 1, padding: "8px" }}
+            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-          <button type="submit" disabled={addLoading} style={{ padding: "8px 16px" }}>
+          <button
+            type="submit"
+            disabled={addLoading}
+            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             {addLoading ? "Adding..." : "Add"}
           </button>
         </div>
-        {addError && <p style={{ color: "red" }}>{addError}</p>}
+        {addError && <p className="mt-1 text-sm text-red-600">{addError}</p>}
       </form>
 
-      {listError && <p style={{ color: "red" }}>{listError}</p>}
-      {editError && <p style={{ color: "red" }}>{editError}</p>}
+      {listError && <p className="mt-2 text-sm text-red-600">{listError}</p>}
+      {editError && <p className="mt-2 text-sm text-red-600">{editError}</p>}
 
       {loadingList ? (
-        <p>Loading categories...</p>
+        <p className="mt-3 text-sm text-slate-500">Loading categories...</p>
       ) : categories.length === 0 ? (
-        <p>No categories yet.</p>
+        <p className="mt-3 text-sm text-slate-500">No categories yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="mt-3 divide-y divide-slate-100">
           {categories.map((category) => (
-            <li
-              key={category.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 0",
-                borderBottom: "1px solid #eee",
-              }}
-            >
+            <li key={category.id} className="flex items-center gap-2 py-2">
               {editingId === category.id ? (
                 <>
                   <input
                     type="text"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    style={{ flex: 1, padding: "6px" }}
+                    className="flex-1 rounded-md border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   />
                   <button
                     onClick={() => handleEditSave(category.id)}
                     disabled={editLoading}
-                    style={{ padding: "6px 12px" }}
+                    className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
                   >
                     {editLoading ? "Saving..." : "Save"}
                   </button>
-                  <button onClick={cancelEdit} disabled={editLoading} style={{ padding: "6px 12px" }}>
+                  <button
+                    onClick={cancelEdit}
+                    disabled={editLoading}
+                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
+                  >
                     Cancel
                   </button>
                 </>
               ) : (
                 <>
-                  <span style={{ flex: 1 }}>{category.name}</span>
-                  <button onClick={() => startEdit(category)} style={{ padding: "6px 12px" }}>
+                  <span className="flex-1 text-sm text-slate-800">{category.name}</span>
+                  <button
+                    onClick={() => startEdit(category)}
+                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                  >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(category.id)}
                     disabled={deletingId === category.id}
-                    style={{ padding: "6px 12px" }}
+                    className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
                   >
                     {deletingId === category.id ? "Deleting..." : "Delete"}
                   </button>

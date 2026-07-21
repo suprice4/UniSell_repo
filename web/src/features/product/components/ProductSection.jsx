@@ -70,19 +70,22 @@ function ProductSection() {
     handleUpdateAllocation,
   } = useInventory();
 
+  const inputClass =
+    "rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500";
+
   return (
     <div>
-      <h3 style={{ marginTop: "32px" }}>Products</h3>
+      <h3 className="text-lg font-semibold text-slate-900">Products</h3>
 
-      <form onSubmit={handleAddProduct} style={{ marginBottom: "16px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <form onSubmit={handleAddProduct} className="mt-3">
+        <div className="flex flex-col gap-2">
           <input
             type="text"
             value={newProductName}
             onChange={(e) => setNewProductName(e.target.value)}
             placeholder="Product name"
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           />
           <input
             type="text"
@@ -90,7 +93,7 @@ function ProductSection() {
             onChange={(e) => setNewProductSku(e.target.value)}
             placeholder="SKU"
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           />
           <input
             type="number"
@@ -99,7 +102,7 @@ function ProductSection() {
             onChange={(e) => setNewProductPrice(e.target.value)}
             placeholder="Price"
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           />
           <input
             type="number"
@@ -107,13 +110,13 @@ function ProductSection() {
             onChange={(e) => setNewProductQuantity(e.target.value)}
             placeholder="Quantity"
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           />
           <select
             value={newProductCategoryId}
             onChange={(e) => setNewProductCategoryId(e.target.value)}
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           >
             <option value="" disabled>
               Select category
@@ -124,41 +127,45 @@ function ProductSection() {
               </option>
             ))}
           </select>
-          <button type="submit" disabled={addProductLoading} style={{ padding: "8px 16px" }}>
+          <button
+            type="submit"
+            disabled={addProductLoading}
+            className="self-start rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             {addProductLoading ? "Adding..." : "Add Product"}
           </button>
         </div>
-        {addProductError && <p style={{ color: "red" }}>{addProductError}</p>}
+        {addProductError && <p className="mt-1 text-sm text-red-600">{addProductError}</p>}
       </form>
 
-      {productListError && <p style={{ color: "red" }}>{productListError}</p>}
-      {editProductError && <p style={{ color: "red" }}>{editProductError}</p>}
-      {inventoryError && <p style={{ color: "red" }}>{inventoryError}</p>}
+      {productListError && <p className="mt-2 text-sm text-red-600">{productListError}</p>}
+      {editProductError && <p className="mt-2 text-sm text-red-600">{editProductError}</p>}
+      {inventoryError && <p className="mt-2 text-sm text-red-600">{inventoryError}</p>}
 
       {loadingProducts ? (
-        <p>Loading products...</p>
+        <p className="mt-3 text-sm text-slate-500">Loading products...</p>
       ) : products.length === 0 ? (
-        <p>No products yet.</p>
+        <p className="mt-3 text-sm text-slate-500">No products yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="mt-3 divide-y divide-slate-100">
           {products.map((product) => (
-            <li key={product.id} style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <li key={product.id} className="py-2">
+              <div className="flex items-center gap-2">
                 {editingProductId === product.id ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: 1 }}>
+                  <div className="flex flex-1 flex-col gap-1.5">
                     <input
                       type="text"
                       value={editProductName}
                       onChange={(e) => setEditProductName(e.target.value)}
                       placeholder="Product name"
-                      style={{ padding: "6px" }}
+                      className={inputClass}
                     />
                     <input
                       type="text"
                       value={editProductSku}
                       onChange={(e) => setEditProductSku(e.target.value)}
                       placeholder="SKU"
-                      style={{ padding: "6px" }}
+                      className={inputClass}
                     />
                     <input
                       type="number"
@@ -166,19 +173,19 @@ function ProductSection() {
                       value={editProductPrice}
                       onChange={(e) => setEditProductPrice(e.target.value)}
                       placeholder="Price"
-                      style={{ padding: "6px" }}
+                      className={inputClass}
                     />
                     <input
                       type="number"
                       value={editProductQuantity}
                       onChange={(e) => setEditProductQuantity(e.target.value)}
                       placeholder="Quantity"
-                      style={{ padding: "6px" }}
+                      className={inputClass}
                     />
                     <select
                       value={editProductCategoryId}
                       onChange={(e) => setEditProductCategoryId(e.target.value)}
-                      style={{ padding: "6px" }}
+                      className={inputClass}
                     >
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
@@ -186,18 +193,18 @@ function ProductSection() {
                         </option>
                       ))}
                     </select>
-                    <div style={{ display: "flex", gap: "8px" }}>
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleEditProductSave(product.id)}
                         disabled={editProductLoading}
-                        style={{ padding: "6px 12px" }}
+                        className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
                       >
                         {editProductLoading ? "Saving..." : "Save"}
                       </button>
                       <button
                         onClick={cancelEditProduct}
                         disabled={editProductLoading}
-                        style={{ padding: "6px 12px" }}
+                        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
                       >
                         Cancel
                       </button>
@@ -205,36 +212,32 @@ function ProductSection() {
                   </div>
                 ) : (
                   <>
-                    <span style={{ flex: 1 }}>
+                    <span className="flex-1 text-sm text-slate-800">
                       {product.name} ({product.sku}) — ${product.price} — qty {product.quantity} —{" "}
                       {product.categoryName}
                       {isLowStock(product) && (
-                        <span
-                          style={{
-                            marginLeft: "8px",
-                            padding: "2px 8px",
-                            borderRadius: "4px",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            color: "#fff",
-                            backgroundColor: "#c0392b",
-                          }}
-                        >
+                        <span className="ml-2 rounded-md bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                           LOW STOCK
                         </span>
                       )}
                     </span>
-                    <button onClick={() => startEditProduct(product)} style={{ padding: "6px 12px" }}>
+                    <button
+                      onClick={() => startEditProduct(product)}
+                      className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                    >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteProduct(product.id)}
                       disabled={deletingProductId === product.id}
-                      style={{ padding: "6px 12px" }}
+                      className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
                     >
                       {deletingProductId === product.id ? "Deleting..." : "Delete"}
                     </button>
-                    <button onClick={() => toggleExpandProduct(product.id)} style={{ padding: "6px 12px" }}>
+                    <button
+                      onClick={() => toggleExpandProduct(product.id)}
+                      className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                    >
                       {expandedProductId === product.id ? "Hide platforms" : "Platforms"}
                     </button>
                   </>

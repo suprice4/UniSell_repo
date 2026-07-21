@@ -53,17 +53,28 @@ function OrderSection() {
 
   const { platforms, products } = useDashboard();
 
+  const inputClass =
+    "rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500";
+  const smallInputClass =
+    "rounded-md border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500";
+  const secondaryBtn =
+    "rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60";
+  const primaryBtn =
+    "rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60";
+  const dangerBtn =
+    "rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60";
+
   return (
     <div>
-      <h3 style={{ marginTop: "32px" }}>Orders</h3>
+      <h3 className="text-lg font-semibold text-slate-900">Orders</h3>
 
-      <form onSubmit={handleCreateOrderSubmit} style={{ marginBottom: "16px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <form onSubmit={handleCreateOrderSubmit} className="mt-3">
+        <div className="flex flex-col gap-2">
           <select
             value={newOrderPlatformId}
             onChange={(e) => setNewOrderPlatformId(e.target.value)}
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           >
             <option value="" disabled>
               Select platform
@@ -81,7 +92,7 @@ function OrderSection() {
             onChange={(e) => setNewOrderCustomerName(e.target.value)}
             placeholder="Customer name"
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           />
 
           <input
@@ -90,16 +101,16 @@ function OrderSection() {
             onChange={(e) => setNewOrderCustomerAddress(e.target.value)}
             placeholder="Customer address"
             required
-            style={{ padding: "8px" }}
+            className={inputClass}
           />
 
           {newOrderItems.map((row, index) => (
-            <div key={index} style={{ display: "flex", gap: "8px" }}>
+            <div key={index} className="flex gap-2">
               <select
                 value={row.productId}
                 onChange={(e) => updateOrderItemRow(index, "productId", e.target.value)}
                 required
-                style={{ flex: 2, padding: "8px" }}
+                className={`flex-[2] ${inputClass}`}
               >
                 <option value="" disabled>
                   Select product
@@ -117,77 +128,73 @@ function OrderSection() {
                 onChange={(e) => updateOrderItemRow(index, "quantity", e.target.value)}
                 placeholder="Qty"
                 required
-                style={{ flex: 1, padding: "8px" }}
+                className={`flex-1 ${inputClass}`}
               />
               {newOrderItems.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeOrderItemRow(index)}
-                  style={{ padding: "8px 12px" }}
-                >
+                <button type="button" onClick={() => removeOrderItemRow(index)} className={secondaryBtn}>
                   Remove
                 </button>
               )}
             </div>
           ))}
 
-          <button type="button" onClick={addOrderItemRow} style={{ padding: "8px 16px", alignSelf: "flex-start" }}>
+          <button type="button" onClick={addOrderItemRow} className={`self-start ${secondaryBtn}`}>
             + Add Product
           </button>
 
-          <button type="submit" disabled={createOrderLoading} style={{ padding: "8px 16px" }}>
+          <button type="submit" disabled={createOrderLoading} className={`self-start ${primaryBtn}`}>
             {createOrderLoading ? "Creating..." : "Create Order"}
           </button>
         </div>
-        {createOrderError && <p style={{ color: "red" }}>{createOrderError}</p>}
+        {createOrderError && <p className="mt-1 text-sm text-red-600">{createOrderError}</p>}
       </form>
 
-      {orderListError && <p style={{ color: "red" }}>{orderListError}</p>}
-      {orderActionError && <p style={{ color: "red" }}>{orderActionError}</p>}
+      {orderListError && <p className="mt-2 text-sm text-red-600">{orderListError}</p>}
+      {orderActionError && <p className="mt-2 text-sm text-red-600">{orderActionError}</p>}
 
       {loadingOrders ? (
-        <p>Loading orders...</p>
+        <p className="mt-3 text-sm text-slate-500">Loading orders...</p>
       ) : orders.length === 0 ? (
-        <p>No orders yet.</p>
+        <p className="mt-3 text-sm text-slate-500">No orders yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="mt-3 divide-y divide-slate-100">
           {orders.map((order) => (
-            <li key={order.id} style={{ borderBottom: "1px solid #eee", padding: "12px 0" }}>
+            <li key={order.id} className="py-3">
               <div
-                style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}
+                className="flex cursor-pointer items-center gap-2"
                 onClick={() => toggleExpandOrder(order.id)}
               >
-                <span style={{ flex: 1 }}>
+                <span className="flex-1 text-sm text-slate-800">
                   Order #{order.id} — {order.platformName} — ₱{order.totalAmount}
                 </span>
-                <span>{order.status}</span>
-                <span style={{ fontSize: "12px", color: "#666" }}>{order.paymentStatus}</span>
-                <span style={{ fontSize: "12px", color: "#666" }}>{order.shipmentStatus}</span>
+                <span className="text-sm text-slate-600">{order.status}</span>
+                <span className="text-xs text-slate-500">{order.paymentStatus}</span>
+                <span className="text-xs text-slate-500">{order.shipmentStatus}</span>
               </div>
 
               {expandedOrderId === order.id && (
-                <div style={{ marginTop: "8px", paddingLeft: "16px" }}>
+                <div className="mt-2 pl-4">
                   {(order.customerName || order.customerAddress) && (
-                    <div style={{ marginBottom: "12px", fontSize: "14px", color: "#333" }}>
+                    <div className="mb-3 text-sm text-slate-700">
                       {order.customerName && <div>Customer: {order.customerName}</div>}
                       {order.customerAddress && <div>Address: {order.customerAddress}</div>}
                     </div>
                   )}
 
                   {(order.trackingNumber || order.courierName) && (
-                    <div style={{ marginBottom: "12px", fontSize: "14px", color: "#333" }}>
+                    <div className="mb-3 text-sm text-slate-700">
                       {order.courierName && <div>Courier: {order.courierName}</div>}
                       {order.trackingNumber && <div>Tracking #: {order.trackingNumber}</div>}
                     </div>
                   )}
 
-                  {itemsLoading && <p>Loading items...</p>}
-                  {itemsError && <p style={{ color: "red" }}>{itemsError}</p>}
+                  {itemsLoading && <p className="text-sm text-slate-500">Loading items...</p>}
+                  {itemsError && <p className="text-sm text-red-600">{itemsError}</p>}
 
                   {orderItemsByOrderId[order.id] && (
-                    <ul style={{ listStyle: "none", padding: 0, marginBottom: "12px" }}>
+                    <ul className="mb-3 space-y-1">
                       {orderItemsByOrderId[order.id].map((item) => (
-                        <li key={item.id} style={{ display: "flex", gap: "8px", padding: "4px 0" }}>
+                        <li key={item.id} className="flex items-center gap-2 text-sm text-slate-700">
                           {order.status !== "RETURNED" && (
                             <input
                               type="checkbox"
@@ -203,18 +210,18 @@ function OrderSection() {
                     </ul>
                   )}
 
-                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  <div className="flex flex-wrap gap-2">
                     {NEXT_STATUS[order.status] && (
                       <button
                         onClick={() => handleAdvanceStatus(order)}
                         disabled={
                           orderActionLoadingId === order.id ||
                           (NEXT_STATUS[order.status] === "SHIPPED" &&
-                            !(shipmentTrackingByOrderId[order.id] ?? order.trackingNumber ?? "").trim() )
+                            !(shipmentTrackingByOrderId[order.id] ?? order.trackingNumber ?? "").trim())
                           || (NEXT_STATUS[order.status] === "SHIPPED" &&
                             !(shipmentCourierByOrderId[order.id] ?? order.courierName ?? "").trim())
                         }
-                        style={{ padding: "6px 12px" }}
+                        className={primaryBtn}
                       >
                         {orderActionLoadingId === order.id
                           ? "Updating..."
@@ -226,7 +233,7 @@ function OrderSection() {
                       <button
                         onClick={() => handleMarkPaymentReceived(order)}
                         disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px" }}
+                        className={secondaryBtn}
                       >
                         Mark Payment Received
                       </button>
@@ -236,7 +243,7 @@ function OrderSection() {
                       <button
                         onClick={() => handleMarkUncollected(order)}
                         disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px" }}
+                        className={secondaryBtn}
                       >
                         Mark Shipment Uncollected
                       </button>
@@ -246,7 +253,7 @@ function OrderSection() {
                       <button
                         onClick={() => requestDeleteOrder(order.id)}
                         disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px", color: "#b00020" }}
+                        className={dangerBtn}
                       >
                         Delete Order
                       </button>
@@ -254,19 +261,19 @@ function OrderSection() {
                   </div>
 
                   {confirmDeleteOrderId === order.id && (
-                    <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center" }}>
-                      <span style={{ color: "#b00020" }}>Delete this order permanently?</span>
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-sm text-red-600">Delete this order permanently?</span>
                       <button
                         onClick={() => handleDeleteOrder(order.id)}
                         disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px" }}
+                        className={primaryBtn}
                       >
                         {orderActionLoadingId === order.id ? "Deleting..." : "Confirm Delete"}
                       </button>
                       <button
                         onClick={cancelDeleteOrder}
                         disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px" }}
+                        className={secondaryBtn}
                       >
                         Cancel
                       </button>
@@ -274,26 +281,26 @@ function OrderSection() {
                   )}
 
                   {(order.status === "PROCESSING" || order.status === "SHIPPED") && (
-                    <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
                       <input
                         type="text"
                         placeholder="Courier name"
                         value={shipmentCourierByOrderId[order.id] ?? order.courierName ?? ""}
                         onChange={(e) => setShipmentCourier(order.id, e.target.value)}
-                        style={{ flex: 1, padding: "6px" }}
+                        className={`flex-1 ${smallInputClass}`}
                       />
                       <input
                         type="text"
                         placeholder="Tracking number"
                         value={shipmentTrackingByOrderId[order.id] ?? order.trackingNumber ?? ""}
                         onChange={(e) => setShipmentTracking(order.id, e.target.value)}
-                        style={{ flex: 1, padding: "6px" }}
+                        className={`flex-1 ${smallInputClass}`}
                       />
                       {order.status === "SHIPPED" && (
                         <button
                           onClick={() => handleUpdateShipmentDetails(order.id)}
                           disabled={orderActionLoadingId === order.id}
-                          style={{ padding: "6px 12px" }}
+                          className={secondaryBtn}
                         >
                           Save Shipment Details
                         </button>
@@ -302,18 +309,18 @@ function OrderSection() {
                   )}
 
                   {order.status !== "RETURNED" && (
-                    <div style={{ marginTop: "8px", display: "flex", gap: "8px", alignItems: "center" }}>
+                    <div className="mt-2 flex items-center gap-2">
                       <input
                         type="text"
                         placeholder="Return reason"
                         value={returnReasonByOrderId[order.id] || ""}
                         onChange={(e) => setReturnReason(order.id, e.target.value)}
-                        style={{ flex: 1, padding: "6px" }}
+                        className={`flex-1 ${smallInputClass}`}
                       />
                       <button
                         onClick={() => handleProcessReturn(order.id)}
                         disabled={orderActionLoadingId === order.id}
-                        style={{ padding: "6px 12px" }}
+                        className={secondaryBtn}
                       >
                         Process Return (Selected Items)
                       </button>

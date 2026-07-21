@@ -26,26 +26,18 @@ function VendorDashboardContent() {
   return (
     <>
       <Header title="Vendor Dashboard" />
-      <div style={{ maxWidth: "500px", margin: "60px auto", fontFamily: "sans-serif" }}>
-        <h2>Vendor Dashboard</h2>
+      <div className="mx-auto max-w-2xl px-4 py-10">
+        <h2 className="text-xl font-semibold text-slate-900">Vendor Dashboard</h2>
 
         {lowStockEntries.length > 0 && (
-          <div
-            style={{
-              backgroundColor: "#fdecea",
-              border: "1px solid #c0392b",
-              borderRadius: "4px",
-              padding: "12px",
-              marginBottom: "16px",
-            }}
-          >
-            <strong style={{ color: "#c0392b" }}>
+          <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3">
+            <strong className="text-sm text-red-700">
               Low stock alert: {lowStockEntries.length} product
               {lowStockEntries.length > 1 ? "s" : ""} below threshold
             </strong>
-            <ul style={{ margin: "8px 0 0", paddingLeft: "20px" }}>
+            <ul className="mt-2 list-disc space-y-0.5 pl-5">
               {lowStockEntries.map(({ product, lowTotal, lowAllocations }) => (
-                <li key={product.id} style={{ fontSize: "14px" }}>
+                <li key={product.id} className="text-sm text-red-700">
                   {product.name} ({product.sku})
                   {lowTotal && (
                     <>
@@ -68,10 +60,20 @@ function VendorDashboardContent() {
           </div>
         )}
 
-        <CategorySection />
-        <PlatformSection />
-        <ProductSection />
-        <OrderSection />
+        <div className="mt-6 space-y-6">
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <CategorySection />
+          </section>
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <PlatformSection />
+          </section>
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <ProductSection />
+          </section>
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <OrderSection />
+          </section>
+        </div>
       </div>
     </>
   );

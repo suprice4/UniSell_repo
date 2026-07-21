@@ -24,78 +24,76 @@ function PlatformSection() {
 
   return (
     <div>
-      <h3 style={{ marginTop: "32px" }}>Platforms</h3>
+      <h3 className="text-lg font-semibold text-slate-900">Platforms</h3>
 
-      <form onSubmit={handleAddPlatform} style={{ marginBottom: "16px" }}>
-        <div style={{ display: "flex", gap: "8px" }}>
+      <form onSubmit={handleAddPlatform} className="mt-3">
+        <div className="flex gap-2">
           <input
             type="text"
             value={newPlatformName}
             onChange={(e) => setNewPlatformName(e.target.value)}
             placeholder="New platform name"
             required
-            style={{ flex: 1, padding: "8px" }}
+            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-          <button type="submit" disabled={addPlatformLoading} style={{ padding: "8px 16px" }}>
+          <button
+            type="submit"
+            disabled={addPlatformLoading}
+            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             {addPlatformLoading ? "Adding..." : "Add"}
           </button>
         </div>
-        {addPlatformError && <p style={{ color: "red" }}>{addPlatformError}</p>}
+        {addPlatformError && <p className="mt-1 text-sm text-red-600">{addPlatformError}</p>}
       </form>
 
-      {platformListError && <p style={{ color: "red" }}>{platformListError}</p>}
-      {editPlatformError && <p style={{ color: "red" }}>{editPlatformError}</p>}
+      {platformListError && <p className="mt-2 text-sm text-red-600">{platformListError}</p>}
+      {editPlatformError && <p className="mt-2 text-sm text-red-600">{editPlatformError}</p>}
 
       {loadingPlatforms ? (
-        <p>Loading platforms...</p>
+        <p className="mt-3 text-sm text-slate-500">Loading platforms...</p>
       ) : platforms.length === 0 ? (
-        <p>No platforms yet.</p>
+        <p className="mt-3 text-sm text-slate-500">No platforms yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="mt-3 divide-y divide-slate-100">
           {platforms.map((platform) => (
-            <li
-              key={platform.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 0",
-                borderBottom: "1px solid #eee",
-              }}
-            >
+            <li key={platform.id} className="flex items-center gap-2 py-2">
               {editingPlatformId === platform.id ? (
                 <>
                   <input
                     type="text"
                     value={editPlatformName}
                     onChange={(e) => setEditPlatformName(e.target.value)}
-                    style={{ flex: 1, padding: "6px" }}
+                    className="flex-1 rounded-md border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   />
                   <button
                     onClick={() => handleEditPlatformSave(platform.id)}
                     disabled={editPlatformLoading}
-                    style={{ padding: "6px 12px" }}
+                    className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
                   >
                     {editPlatformLoading ? "Saving..." : "Save"}
                   </button>
                   <button
                     onClick={cancelEditPlatform}
                     disabled={editPlatformLoading}
-                    style={{ padding: "6px 12px" }}
+                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
                   >
                     Cancel
                   </button>
                 </>
               ) : (
                 <>
-                  <span style={{ flex: 1 }}>{platform.name}</span>
-                  <button onClick={() => startEditPlatform(platform)} style={{ padding: "6px 12px" }}>
+                  <span className="flex-1 text-sm text-slate-800">{platform.name}</span>
+                  <button
+                    onClick={() => startEditPlatform(platform)}
+                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                  >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeletePlatform(platform.id)}
                     disabled={deletingPlatformId === platform.id}
-                    style={{ padding: "6px 12px" }}
+                    className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
                   >
                     {deletingPlatformId === platform.id ? "Deleting..." : "Delete"}
                   </button>

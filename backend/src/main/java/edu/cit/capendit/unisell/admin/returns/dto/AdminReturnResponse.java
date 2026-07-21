@@ -21,8 +21,6 @@ public class AdminReturnResponse {
         dto.orderId = returnRecord.getOrder().getId();
         dto.vendorName = returnRecord.getOrder().getVendor().getName();
         dto.vendorEmail = returnRecord.getOrder().getVendor().getEmail();
-        // NOTE: assumes Product exposes getName() — verify against the actual
-        // product/model/Product.java before relying on this in the frontend.
         dto.productName = returnRecord.getOrderItem().getProduct().getName();
         dto.quantity = returnRecord.getOrderItem().getQuantity();
         dto.reason = returnRecord.getReason();

@@ -10,30 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/slate_900" />
 
     <TextView
         android:id="@+id/tvReturnVendor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:textColor="@color/slate_600" />
 
     <TextView
         android:id="@+id/tvReturnProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:textColor="@color/slate_700" />
 
     <TextView
         android:id="@+id/tvReturnReason"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:textColor="@color/slate_600" />
 
     <TextView
         android:id="@+id/tvReturnDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:textColor="@color/slate_500" />
 
 </LinearLayout>

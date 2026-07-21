@@ -5,19 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/slate_50"
     tools:context=".dashboard.AdminDashboardActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Admin Dashboard"
-        android:textSize="24sp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/slate_900"
+        android:background="@color/white"
         android:padding="16dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutAdmin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabIndicatorColor="@color/indigo_600"
+        app:tabSelectedTextColor="@color/indigo_600"
+        app:tabTextColor="@color/slate_500"
         app:tabMode="scrollable" />
 
     <androidx.viewpager2.widget.ViewPager2

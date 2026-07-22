@@ -49,6 +49,15 @@
         android:background="@color/slate_100">
 
         <TextView
+            android:id="@+id/tvOrderCustomerInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/slate_700"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tvItemsLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,6 +103,79 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mark Uncollected" />
+
+            <Button
+                android:id="@+id/btnDeleteOrder"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red_600"
+                app:strokeColor="@color/red_200"
+                android:text="Delete Order" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llDeleteConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Delete this order permanently?"
+                android:textColor="@color/red_600"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btnConfirmDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm" />
+
+            <Button
+                android:id="@+id/btnCancelDelete"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llShipmentDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/etCourierName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Courier name" />
+
+            <EditText
+                android:id="@+id/etTrackingNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Tracking number" />
+
+            <Button
+                android:id="@+id/btnSaveShipmentDetails"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save" />
 
         </LinearLayout>
 

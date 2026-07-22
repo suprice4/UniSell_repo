@@ -5,6 +5,10 @@ data class OrderResponse(
     val vendorId: Long,
     val platformId: Long,
     val platformName: String,
+    val customerName: String?,
+    val customerAddress: String?,
+    val trackingNumber: String?,
+    val courierName: String?,
     val status: String,
     val paymentStatus: String,
     val shipmentStatus: String,
@@ -23,4 +27,13 @@ data class OrderItemResponse(
 data class StatusUpdateRequest(val status: String)
 data class PaymentStatusUpdateRequest(val paymentStatus: String)
 data class ShipmentStatusUpdateRequest(val status: String)
+data class ShipmentDetailsRequest(val trackingNumber: String, val courierName: String)
 data class ReturnRequest(val orderItemIds: List<Long>, val reason: String)
+
+data class OrderItemRequest(val productId: Long, val quantity: Int)
+data class OrderRequest(
+    val platformId: Long,
+    val customerName: String,
+    val customerAddress: String,
+    val items: List<OrderItemRequest>
+)

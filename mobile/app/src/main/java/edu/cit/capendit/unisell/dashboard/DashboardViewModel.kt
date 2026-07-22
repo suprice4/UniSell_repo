@@ -15,9 +15,8 @@ import retrofit2.Response
  * Shared across CategoryFragment, PlatformFragment, and ProductFragment (all obtained via
  * activityViewModels() so they share one instance scoped to VendorDashboardActivity) so
  * categories and platforms are each fetched once per dashboard session instead of
- * independently by every fragment that needs them.
- *
- * OrderFragment intentionally does not use this — it has no dependency on categories or platforms.
+ * independently by every fragment that needs them. OrderFragment also observes `platforms`
+ * (for the create-order platform picker) but has no dependency on categories.
  */
 class DashboardViewModel : ViewModel() {
 

@@ -11,6 +11,9 @@ interface OrderApi {
     @GET("orders/{id}/items")
     suspend fun getOrderItems(@Path("id") id: Long): Response<List<OrderItemResponse>>
 
+    @POST("orders")
+    suspend fun createOrder(@Body request: OrderRequest): Response<OrderResponse>
+
     @PUT("orders/{id}/status")
     suspend fun updateStatus(@Path("id") id: Long, @Body request: StatusUpdateRequest): Response<OrderResponse>
 
@@ -22,4 +25,10 @@ interface OrderApi {
 
     @PUT("orders/{id}/shipment-status")
     suspend fun markUncollected(@Path("id") id: Long, @Body request: ShipmentStatusUpdateRequest): Response<OrderResponse>
+
+    @PUT("orders/{id}/shipment-details")
+    suspend fun updateShipmentDetails(@Path("id") id: Long, @Body request: ShipmentDetailsRequest): Response<OrderResponse>
+
+    @DELETE("orders/{id}")
+    suspend fun deleteOrder(@Path("id") id: Long): Response<Unit>
 }

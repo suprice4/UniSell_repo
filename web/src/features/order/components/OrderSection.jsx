@@ -157,19 +157,28 @@ function OrderSection() {
       ) : orders.length === 0 ? (
         <p className="mt-3 text-sm text-slate-500">No orders yet.</p>
       ) : (
-        <ul className="mt-3 divide-y divide-slate-100">
+        <div className="mt-3">
+          <div className="flex items-center gap-2 border-b border-slate-200 pb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+            <span className="flex-1">Order</span>
+            <span className="flex-1">Platform</span>
+            <span className="w-24">Amount</span>
+            <span className="w-28">Status</span>
+            <span className="w-24">Payment</span>
+            <span className="w-24">Shipment</span>
+          </div>
+          <ul className="divide-y divide-slate-100">
           {orders.map((order) => (
             <li key={order.id} className="py-3">
               <div
                 className="flex cursor-pointer items-center gap-2"
                 onClick={() => toggleExpandOrder(order.id)}
               >
-                <span className="flex-1 text-sm text-slate-800">
-                  Order #{order.id} — {order.platformName} — ₱{order.totalAmount}
-                </span>
-                <span className="text-sm text-slate-600">{order.status}</span>
-                <span className="text-xs text-slate-500">{order.paymentStatus}</span>
-                <span className="text-xs text-slate-500">{order.shipmentStatus}</span>
+                <span className="flex-1 text-sm text-slate-800">Order #{order.id}</span>
+                <span className="flex-1 text-sm text-slate-600">{order.platformName}</span>
+                <span className="w-24 text-sm text-slate-600">₱{order.totalAmount}</span>
+                <span className="w-28 text-sm text-slate-600">{order.status}</span>
+                <span className="w-24 text-xs text-slate-500">{order.paymentStatus}</span>
+                <span className="w-24 text-xs text-slate-500">{order.shipmentStatus}</span>
               </div>
 
               {expandedOrderId === order.id && (
@@ -330,7 +339,8 @@ function OrderSection() {
               )}
             </li>
           ))}
-        </ul>
+          </ul>
+        </div>
       )}
     </div>
   );

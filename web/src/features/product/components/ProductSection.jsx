@@ -147,7 +147,16 @@ function ProductSection() {
       ) : products.length === 0 ? (
         <p className="mt-3 text-sm text-slate-500">No products yet.</p>
       ) : (
-        <ul className="mt-3 divide-y divide-slate-100">
+        <div className="mt-3">
+          <div className="flex items-center gap-2 border-b border-slate-200 pb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+            <span className="flex-1">Name</span>
+            <span className="w-24">SKU</span>
+            <span className="w-20">Price</span>
+            <span className="w-16">Qty</span>
+            <span className="flex-1">Category</span>
+            <span>Actions</span>
+          </div>
+          <ul className="divide-y divide-slate-100">
           {products.map((product) => (
             <li key={product.id} className="py-2">
               <div className="flex items-center gap-2">
@@ -213,33 +222,38 @@ function ProductSection() {
                 ) : (
                   <>
                     <span className="flex-1 text-sm text-slate-800">
-                      {product.name} ({product.sku}) — ${product.price} — qty {product.quantity} —{" "}
-                      {product.categoryName}
+                      {product.name}
                       {isLowStock(product) && (
                         <span className="ml-2 rounded-md bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                           LOW STOCK
                         </span>
                       )}
                     </span>
-                    <button
-                      onClick={() => startEditProduct(product)}
-                      className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteProduct(product.id)}
-                      disabled={deletingProductId === product.id}
-                      className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
-                    >
-                      {deletingProductId === product.id ? "Deleting..." : "Delete"}
-                    </button>
-                    <button
-                      onClick={() => toggleExpandProduct(product.id)}
-                      className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-                    >
-                      {expandedProductId === product.id ? "Hide platforms" : "Platforms"}
-                    </button>
+                    <span className="w-24 text-sm text-slate-600">{product.sku}</span>
+                    <span className="w-20 text-sm text-slate-600">${product.price}</span>
+                    <span className="w-16 text-sm text-slate-600">{product.quantity}</span>
+                    <span className="flex-1 text-sm text-slate-600">{product.categoryName}</span>
+                    <span className="flex gap-2">
+                      <button
+                        onClick={() => startEditProduct(product)}
+                        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(product.id)}
+                        disabled={deletingProductId === product.id}
+                        className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                      >
+                        {deletingProductId === product.id ? "Deleting..." : "Delete"}
+                      </button>
+                      <button
+                        onClick={() => toggleExpandProduct(product.id)}
+                        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        {expandedProductId === product.id ? "Hide platforms" : "Platforms"}
+                      </button>
+                    </span>
                   </>
                 )}
               </div>
@@ -271,7 +285,8 @@ function ProductSection() {
               )}
             </li>
           ))}
-        </ul>
+          </ul>
+        </div>
       )}
     </div>
   );

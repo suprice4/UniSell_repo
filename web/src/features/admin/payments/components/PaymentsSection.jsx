@@ -14,24 +14,34 @@ function PaymentsSection() {
       ) : payments.length === 0 ? (
         <p className="mt-3 text-sm text-slate-500">No orders yet.</p>
       ) : (
-        <ul className="mt-3 divide-y divide-slate-100">
-          {payments.map((p) => (
-            <li key={p.orderId} className="flex items-center gap-2 py-2.5">
-              <span className="flex-1 text-sm text-slate-800">Order #{p.orderId}</span>
-              <span className="flex-1 text-sm text-slate-600">{p.vendorName}</span>
-              <span className="flex-1 text-sm text-slate-600">{p.vendorEmail}</span>
-              <span className="flex-1 text-sm text-slate-600">{p.platformName}</span>
-              <span className="flex-1 text-sm text-slate-800">₱{p.totalAmount?.toFixed(2)}</span>
-              <span
-                className={`w-28 text-sm font-medium ${
-                  p.paymentStatus === "PAID" ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {p.paymentStatus}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-3">
+          <div className="flex items-center gap-2 border-b border-slate-200 pb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+            <span className="flex-1">Order</span>
+            <span className="flex-1">Vendor</span>
+            <span className="flex-1">Email</span>
+            <span className="flex-1">Platform</span>
+            <span className="flex-1">Amount</span>
+            <span className="w-28">Status</span>
+          </div>
+          <ul className="divide-y divide-slate-100">
+            {payments.map((p) => (
+              <li key={p.orderId} className="flex items-center gap-2 py-2.5">
+                <span className="flex-1 text-sm text-slate-800">Order #{p.orderId}</span>
+                <span className="flex-1 text-sm text-slate-600">{p.vendorName}</span>
+                <span className="flex-1 text-sm text-slate-600">{p.vendorEmail}</span>
+                <span className="flex-1 text-sm text-slate-600">{p.platformName}</span>
+                <span className="flex-1 text-sm text-slate-800">₱{p.totalAmount?.toFixed(2)}</span>
+                <span
+                  className={`w-28 text-sm font-medium ${
+                    p.paymentStatus === "PAID" ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {p.paymentStatus}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

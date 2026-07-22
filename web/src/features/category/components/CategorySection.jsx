@@ -56,7 +56,12 @@ function CategorySection() {
       ) : categories.length === 0 ? (
         <p className="mt-3 text-sm text-slate-500">No categories yet.</p>
       ) : (
-        <ul className="mt-3 divide-y divide-slate-100">
+        <div className="mt-3">
+        <div className="flex items-center gap-2 border-b border-slate-200 pb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+          <span className="flex-1">Name</span>
+          <span>Actions</span>
+        </div>
+        <ul className="divide-y divide-slate-100">
           {categories.map((category) => (
             <li key={category.id} className="flex items-center gap-2 py-2">
               {editingId === category.id ? (
@@ -103,6 +108,7 @@ function CategorySection() {
             </li>
           ))}
         </ul>
+        </div>
       )}
     </div>
   );

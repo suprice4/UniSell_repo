@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.admin.activitylog.model.ActivityLogResponse
+import edu.cit.capendit.unisell.core.util.formatTimestamp
 
 class ActivityLogAdapter(
     private val entries: MutableList<ActivityLogResponse>
@@ -28,9 +29,9 @@ class ActivityLogAdapter(
     override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
         val entry = entries[position]
         holder.tvActor.text = "${entry.actorEmail} (${entry.actorRole})"
-        holder.tvAction.text = entry.actionType
+        holder.tvAction.text = "Action: ${entry.actionType}"
         holder.tvDescription.text = entry.description
-        holder.tvTimestamp.text = entry.timestamp
+        holder.tvTimestamp.text = formatTimestamp(entry.timestamp)
     }
 
     override fun getItemCount(): Int = entries.size

@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.admin.returns.model.AdminReturnResponse
+import edu.cit.capendit.unisell.core.util.formatTimestamp
 
 class AdminReturnAdapter(
     private val returns: MutableList<AdminReturnResponse>
@@ -31,8 +32,8 @@ class AdminReturnAdapter(
         holder.tvOrder.text = "Order #${record.orderId}"
         holder.tvVendor.text = "${record.vendorName} (${record.vendorEmail})"
         holder.tvProduct.text = "${record.productName} x${record.quantity}"
-        holder.tvReason.text = record.reason ?: "—"
-        holder.tvDate.text = record.returnedAt
+        holder.tvReason.text = "Reason: ${record.reason ?: "—"}"
+        holder.tvDate.text = "Returned: ${formatTimestamp(record.returnedAt)}"
     }
 
     override fun getItemCount(): Int = returns.size

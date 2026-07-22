@@ -230,7 +230,7 @@ function ProductSection() {
                       )}
                     </span>
                     <span className="w-24 text-sm text-slate-600">{product.sku}</span>
-                    <span className="w-20 text-sm text-slate-600">${product.price}</span>
+                    <span className="w-20 text-sm text-slate-600">₱{product.price}</span>
                     <span className="w-16 text-sm text-slate-600">{product.quantity}</span>
                     <span className="flex-1 text-sm text-slate-600">{product.categoryName}</span>
                     <span className="flex gap-2">

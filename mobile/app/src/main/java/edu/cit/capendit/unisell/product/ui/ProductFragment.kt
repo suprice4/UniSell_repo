@@ -56,7 +56,8 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
             onDelete = { showDeleteProductConfirm(it) },
             onToggleExpand = { toggleProductPlatforms(it) },
             onAllocate = { productId, platformId, quantity -> allocateStock(productId, platformId, quantity) },
-            onRemoveAllocation = { productId, platformId -> removeAllocation(productId, platformId) }
+            onRemoveAllocation = { productId, platformId -> removeAllocation(productId, platformId) },
+            onUpdateAllocation = { productId, platformId, quantity -> updateAllocation(productId, platformId, quantity) }
         )
         rvProducts.layoutManager = LinearLayoutManager(requireContext())
         rvProducts.adapter = productAdapter
@@ -305,6 +306,25 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
             try {
                 val response = ApiClient.inventoryApi.allocateStock(
                     productId,
+                    ProductPlatformInventoryRequest(platformId, quantity)
+                )
+                if (response.isSuccessful) {
+                    loadAllocationsForProduct(productId)
+                } else {
+                    productAdapter.setInventoryError(productId, extractErrorMessage(response))
+                }
+            } catch (e: Exception) {
+                productAdapter.setInventoryError(productId, "Network error: ${e.message}")
+            }
+        }
+    }
+
+    private fun updateAllocation(productId: Long, platformId: Long, quantity: Int) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = ApiClient.inventoryApi.updateAllocation(
+                    productId,
+                    platformId,
                     ProductPlatformInventoryRequest(platformId, quantity)
                 )
                 if (response.isSuccessful) {

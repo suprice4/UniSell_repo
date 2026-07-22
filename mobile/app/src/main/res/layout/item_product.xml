@@ -18,13 +18,35 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvProductName"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/slate_900" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/slate_900" />
+
+                <TextView
+                    android:id="@+id/tvProductLowStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOW STOCK"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:background="@color/red_600"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginStart="6dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvProductDetails"
@@ -83,7 +105,7 @@
             android:id="@+id/tvInventoryError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#D32F2F"
+            android:textColor="@color/red_600"
             android:visibility="gone"
             android:layout_marginTop="4dp" />
 

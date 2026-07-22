@@ -3,26 +3,92 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:gravity="center_vertical">
+    android:paddingBottom="4dp">
 
-    <TextView
-        android:id="@+id/tvAllocationLabel"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/llAllocationDisplay"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="14sp"
-        android:textColor="@color/slate_700" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-    <Button
-        android:id="@+id/btnRemoveAllocation"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvAllocationLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/slate_700" />
+
+        <TextView
+            android:id="@+id/tvAllocationLowStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOW STOCK"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@color/red_600"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:layout_marginEnd="6dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnEditAllocation"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/btnRemoveAllocation"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red_600"
+            app:strokeColor="@color/red_200"
+            android:text="Remove" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llAllocationEdit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/red_600"
-        app:strokeColor="@color/red_200"
-        android:text="Remove" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvAllocationEditPlatform"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/slate_700" />
+
+        <EditText
+            android:id="@+id/etAllocationEditQuantity"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/btnSaveAllocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/btnCancelAllocation"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+    </LinearLayout>
 
 </LinearLayout>

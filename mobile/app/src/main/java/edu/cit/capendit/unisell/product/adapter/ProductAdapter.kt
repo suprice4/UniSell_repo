@@ -14,6 +14,7 @@ import edu.cit.capendit.unisell.R
 import edu.cit.capendit.unisell.platform.model.PlatformResponse
 import edu.cit.capendit.unisell.inventory.model.ProductPlatformInventoryResponse
 import edu.cit.capendit.unisell.product.model.ProductResponse
+import edu.cit.capendit.unisell.core.util.isLowStock
 
 class ProductAdapter(
     private val products: MutableList<ProductResponse>,
@@ -22,15 +23,18 @@ class ProductAdapter(
     private val onDelete: (ProductResponse) -> Unit,
     private val onToggleExpand: (ProductResponse) -> Unit,
     private val onAllocate: (productId: Long, platformId: Long, quantity: Int) -> Unit,
-    private val onRemoveAllocation: (productId: Long, platformId: Long) -> Unit
+    private val onRemoveAllocation: (productId: Long, platformId: Long) -> Unit,
+    private val onUpdateAllocation: (productId: Long, platformId: Long, quantity: Int) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private var expandedProductId: Long? = null
     private val inventoryByProduct = mutableMapOf<Long, List<ProductPlatformInventoryResponse>>()
     private val inventoryErrorByProduct = mutableMapOf<Long, String?>()
+    private var editingAllocationPlatformId: Long? = null
 
     class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById(R.id.tvProductName)
+        val tvLowStock: TextView = view.findViewById(R.id.tvProductLowStock)
         val tvDetails: TextView = view.findViewById(R.id.tvProductDetails)
         val btnEdit: Button = view.findViewById(R.id.btnEditProduct)
         val btnDelete: Button = view.findViewById(R.id.btnDeleteProduct)
@@ -52,6 +56,8 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         holder.tvName.text = product.name
+        holder.tvLowStock.visibility =
+            if (isLowStock(product.quantity, product.lowStockThreshold)) View.VISIBLE else View.GONE
         holder.tvDetails.text =
             "SKU: ${product.sku} | ₱${product.price} | Qty: ${product.quantity} | ${product.categoryName}"
         holder.btnEdit.setOnClickListener { onEdit(product) }
@@ -76,11 +82,46 @@ class ProductAdapter(
             for (allocation in allocations) {
                 val row = LayoutInflater.from(holder.itemView.context)
                     .inflate(R.layout.item_inventory_allocation_row, holder.llAllocationRows, false)
-                row.findViewById<TextView>(R.id.tvAllocationLabel).text =
-                    "${allocation.platformName}: ${allocation.allocatedQuantity}"
+
+                val llDisplay = row.findViewById<LinearLayout>(R.id.llAllocationDisplay)
+                val llEdit = row.findViewById<LinearLayout>(R.id.llAllocationEdit)
+                val tvLabel = row.findViewById<TextView>(R.id.tvAllocationLabel)
+                val tvLowStockBadge = row.findViewById<TextView>(R.id.tvAllocationLowStock)
+                val tvEditPlatform = row.findViewById<TextView>(R.id.tvAllocationEditPlatform)
+                val etEditQuantity = row.findViewById<EditText>(R.id.etAllocationEditQuantity)
+
+                tvLabel.text = "${allocation.platformName}: ${allocation.allocatedQuantity}"
+                tvLowStockBadge.visibility =
+                    if (isLowStock(allocation.allocatedQuantity, product.lowStockThreshold)) View.VISIBLE else View.GONE
+
+                val isEditingThisRow = editingAllocationPlatformId == allocation.platformId
+                llDisplay.visibility = if (isEditingThisRow) View.GONE else View.VISIBLE
+                llEdit.visibility = if (isEditingThisRow) View.VISIBLE else View.GONE
+
+                row.findViewById<Button>(R.id.btnEditAllocation).setOnClickListener {
+                    editingAllocationPlatformId = allocation.platformId
+                    notifyDataSetChanged()
+                }
                 row.findViewById<Button>(R.id.btnRemoveAllocation).setOnClickListener {
                     onRemoveAllocation(product.id, allocation.platformId)
                 }
+
+                tvEditPlatform.text = allocation.platformName
+                etEditQuantity.setText(allocation.allocatedQuantity.toString())
+                row.findViewById<Button>(R.id.btnCancelAllocation).setOnClickListener {
+                    editingAllocationPlatformId = null
+                    notifyDataSetChanged()
+                }
+                row.findViewById<Button>(R.id.btnSaveAllocation).setOnClickListener {
+                    val quantity = etEditQuantity.text.toString().trim().toIntOrNull()
+                    if (quantity == null || quantity < 0) {
+                        setInventoryError(product.id, "Quantity must be zero or more")
+                        return@setOnClickListener
+                    }
+                    editingAllocationPlatformId = null
+                    onUpdateAllocation(product.id, allocation.platformId, quantity)
+                }
+
                 holder.llAllocationRows.addView(row)
             }
         }
